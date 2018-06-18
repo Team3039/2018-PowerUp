@@ -33,7 +33,8 @@ public class Drivetrain extends Subsystem {
     public DifferentialDrive drivetrain = new DifferentialDrive(leftDrivetrain, rightDrivetrain);
     
     //Driving Encoder
-    public Encoder driveEncoder = new Encoder(RobotMap.driveEncoderA, RobotMap.driveEncoderB, false);
+    public Encoder leftEnc = new Encoder(RobotMap.leftEncoderA, RobotMap.leftEncoderB, false);
+    public Encoder rightEnc = new Encoder(RobotMap.rightEncoderA, RobotMap.rightEncoderA, false);
     
     //Gyro
     public AHRS navX = new AHRS(SPI.Port.kMXP);
@@ -145,19 +146,21 @@ public class Drivetrain extends Subsystem {
         //360 Pulses per Revolution
         //6" Wheel has a Circumference of 18.85"
     	//18.5/360 = x/1
-        driveEncoder.setDistancePerPulse(0.05235987755983);
+        leftEnc.setDistancePerPulse(0.05235987755983);
+        rightEnc.setDistancePerPulse(0.05235987755983);
     }
     
     public double getDistance() {
-        return driveEncoder.getDistance();
+        return leftEnc.getDistance();
     }
     
     public double getRate() {
-    	return driveEncoder.getRate();
+    	return leftEnc.getRate();
     }
     
     public void resetEncoder() {
-        driveEncoder.reset();
+    	leftEnc.reset();
+    	rightEnc.reset();
     }
     
     //NavX
