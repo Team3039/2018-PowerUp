@@ -3,6 +3,7 @@ package org.usfirst.frc.team3039.robot.subsystems;
 import org.usfirst.frc.team3039.robot.RobotMap;
 import org.usfirst.frc.team3039.robot.commands.DriveTeleOp;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
@@ -13,6 +14,11 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import jaci.pathfinder.Pathfinder;
+import jaci.pathfinder.Trajectory;
+import jaci.pathfinder.Waypoint;
+import jaci.pathfinder.followers.EncoderFollower;
+import jaci.pathfinder.modifiers.TankModifier;
 
 /**
  *
@@ -33,7 +39,8 @@ public class Drivetrain extends Subsystem {
     public DifferentialDrive drivetrain = new DifferentialDrive(leftDrivetrain, rightDrivetrain);
     
     //Driving Encoder
-    public Encoder driveEncoder = new Encoder(RobotMap.driveEncoderA, RobotMap.driveEncoderB, false);
+    public Encoder leftEnc = new Encoder(RobotMap.leftEncoderA, RobotMap.leftEncoderB, false);
+    public Encoder rightEnc = new Encoder(RobotMap.leftEncoderA, RobotMap.rightEncoderB, false);
     
     //Gyro
     public AHRS navX = new AHRS(SPI.Port.kMXP);
@@ -57,7 +64,44 @@ public class Drivetrain extends Subsystem {
         drivetrain.curvatureDrive(power, angle, false);
         System.out.println("Angle : " + getAngle());
         }
+//Pathfinder (PF)
+    //Create Trajectory
+    Waypoint[] points = new Waypoint[] {
+    		//Distances are in Meters
+    	    new Waypoint(-4, -1, Pathfinder.d2r(-45)),      // Waypoint @ x=-4, y=-1, exit angle=-45 degrees
+    	    new Waypoint(-2, -2, 0),                        // Waypoint @ x=-2, y=-2, exit angle=0 radians
+    	    new Waypoint(0, 0, 0)                           // Waypoint @ x=0, y=0,   exit angle=0 radians
+    	};
+
+    Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_HIGH, 0.05, 1.7, 2.0, 60.0);
+    Trajectory trajectory = Pathfinder.generate(points, config);
+    TankModifier modifier = new TankModifier(trajectory).modify(0.5588); //22" Drivetrain Width
+    //Create EncoderFollower
+	public EncoderFollower left = new EncoderFollower(modifier.getLeftTrajectory());
+	public EncoderFollower right = new EncoderFollower(modifier.getRightTrajectory());
+	
+    public void setupPF() {
+    	left.configurePIDVA(1.0, 0.0, 1.0, 1 / .9, 0);
+
+    	left.configureEncoder((int)leftEnc.getDistance(), 1440, 6);
+    	right.configureEncoder((int)rightEnc.getDistance(), 1440, 6);
+    }
     
+    public void runPF() {
+    	double l = left.calculate((int)(leftEnc.getDistance()));
+    	double r = right.calculate((int)(rightEnc.getDistance()));
+
+    	double gyro_heading = navX.getYaw();  
+    	double desired_heading = Pathfinder.r2d(left.getHeading()); 
+
+    	double angleDifference = Pathfinder.boundHalfDegrees(desired_heading - gyro_heading);
+    	double turn = 0.8 * (-1.0/80.0) * angleDifference;
+    	
+    	frontleftMotor.set(ControlMode.PercentOutput, l + turn); //https://github.com/Team254/FRC-2017-Public.git
+    	rearleftMotor.set(ControlMode.PercentOutput, l + turn);
+    	frontrightMotor.set(ControlMode.PercentOutput, r - turn);
+    	frontrightMotor.set(ControlMode.PercentOutput, r - turn);
+    }
     public void driveStraight(double power) {
     //Auto Driving
             if(power < 0) {
@@ -145,19 +189,21 @@ public class Drivetrain extends Subsystem {
         //360 Pulses per Revolution
         //6" Wheel has a Circumference of 18.85"
     	//18.5/360 = x/1
-        driveEncoder.setDistancePerPulse(0.05235987755983);
+        leftEnc.setDistancePerPulse(0.05235987755983);
+        rightEnc.setDistancePerPulse(0.05235987755983);
     }
     
     public double getDistance() {
-        return driveEncoder.getDistance();
+        return leftEnc.getDistance();
     }
     
     public double getRate() {
-    	return driveEncoder.getRate();
+    	return leftEnc.getRate();
     }
     
     public void resetEncoder() {
-        driveEncoder.reset();
+        leftEnc.reset();
+        rightEnc.reset();
     }
     
     //NavX
