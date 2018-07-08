@@ -9,11 +9,11 @@ import edu.wpi.first.wpilibj.command.PIDSubsystem;
  * RA = Robot Angle- The Current Angle of the Robot
  * 
  * If Both of these Angles are equal to each other then the PID loop is satisfied,
- * however if there is a difference in the two angles there is an error which which we need to correct.
+ * however if there is a difference in the two angles there is an error which we need to correct.
  * 
  * Error -is the Distance the Robot is from its targetAngle
  * 
- *P=
+ *P=1/error
  *I= Change Over Time  
  *D= Rate of Change
  *
@@ -72,10 +72,6 @@ public class RotatePID extends PIDSubsystem {
       Robot.drivetrain.rearleftMotor.pidWrite(output);
       Robot.drivetrain.rearrightMotor.pidWrite(output);
     	
-//    		Robot.drivetrain.frontleftMotor.pidWrite(output);
-//            Robot.drivetrain.frontrightMotor.pidWrite(output);
-//            Robot.drivetrain.rearleftMotor.pidWrite(output);
-//            Robot.drivetrain.rearrightMotor.pidWrite(output);
     	
 //        System.out.println("On Target:" + onTarget());
 //        System.out.println("Robot Angle" + Robot.drivetrain.getAngle());

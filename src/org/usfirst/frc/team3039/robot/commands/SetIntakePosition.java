@@ -107,7 +107,7 @@ public class SetIntakePosition extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	if(Robot.intake.cubeIn == true && (Robot.intake.cubeAngle == false) && (Robot.intake.cubeVault == false) && (Robot.intake.cubeScored == false) && (Robot.intake.cubeTurn == false) && (Robot.intake.cubePush == false)){
-    		Robot.intakepid.setIntakePosition(285);
+    		Robot.intakepid.setIntakePosition(270);
     		//System.out.println("Cube In Straight");
     		Robot.intake.intakeDown();
     	}

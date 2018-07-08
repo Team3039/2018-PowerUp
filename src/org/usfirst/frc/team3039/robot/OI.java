@@ -99,18 +99,18 @@ public class OI {
 		
 
 //		
-//		//CoPilot Controls
-//		coL3.whileHeld(new LowerElevatorClimb());
-//		coR3.whileHeld(new RaiseElevatorClimb());
-//		coL2.whileHeld(new LowerElevator());
-//		coR2.whileHeld(new LiftElevator());
-//		coR1.whileHeld(new ShootCube());
-//		coL1.whileHeld(new ShootCubeSlow());
-//		cobuttonX.whenPressed(new RunElevatorIntake());
-//		cobuttonSquare.whenPressed(new RunElevatorSwitch());
-//		cobuttonTriangle.whenPressed(new RunElevatorScale());
-//		cobuttonCircle.whenPressed(new RunPreClimb());
-//		cobuttonShare.toggleWhenPressed(new EngageRatchet());
-//		cobuttonOptions.whenPressed(new StopElevator());
+////		//CoPilot Controls
+		coL3.whileHeld(new LowerElevatorClimb());
+		coR3.whileHeld(new RaiseElevatorClimb());
+		coL2.whileHeld(new LowerElevator());
+		coR2.whileHeld(new LiftElevator());
+		coR1.toggleWhenPressed(new ShootCube());
+		coL1.toggleWhenPressed(new ShootCubeSlow());
+		cobuttonX.whenPressed(new RunElevatorIntake());
+		cobuttonSquare.whenPressed(new RunElevatorSwitch());
+		cobuttonTriangle.whenPressed(new RunElevatorScale());
+		cobuttonCircle.whenPressed(new RunPreClimb());
+		cobuttonShare.toggleWhenPressed(new EngageRatchet());
+		cobuttonOptions.whenPressed(new StopElevator());
 	}
 }

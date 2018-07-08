@@ -45,13 +45,13 @@ public class AutoCenterSwitch extends CommandGroup {
        		addSequential(new CurveRight(), .45);
     		addSequential(new AutoResetDriveEncoders(), .025);
     		addParallel(new RunElevatorSwitchAuto());
-    		addSequential(new DriveShortPID(90));
+    		addSequential(new DriveShortPID(87));
     		addSequential(new AutoResetDriveEncoders(), .025);
-    		addSequential(new CurveLeft(), .5);
-    		addSequential(new ShootCube(), .2);
-    		addSequential(new DriveBackward(), .35);
-    		addParallel(new TurnPID(-130));
-    		addSequential(new SetElevatorIntakeAuto());
+    		addSequential(new CurveLeft(), .45);
+//    		addSequential(new ShootCube(), .2);
+//    		addSequential(new DriveBackward(), .35);
+//    		addParallel(new TurnPID(-130));
+//    		addSequential(new SetElevatorIntakeAuto());
 
 
     	}
@@ -64,11 +64,11 @@ public class AutoCenterSwitch extends CommandGroup {
     		addParallel(new RunElevatorSwitchAuto());
     		addSequential(new DriveShortPID(90));
     		addSequential(new AutoResetDriveEncoders(), .1);
-    		addSequential(new CurveRight(), .5);
-    		addSequential(new ShootCube(), .2);
-    		addSequential(new DriveBackward(), .3);
-    		addParallel(new SetElevatorIntakeAuto());
-    		addSequential(new TurnPID(145));
+    		addSequential(new CurveRight(), .45);
+//    		addSequential(new ShootCube(), .2);
+//    		addSequential(new DriveBackward(), .3);
+//    		addParallel(new SetElevatorIntakeAuto());
+//    		addSequential(new TurnPID(145));
 
     	}
     	
@@ -80,7 +80,7 @@ public class AutoCenterSwitch extends CommandGroup {
     		addParallel(new RunElevatorSwitchAuto());
     		addSequential(new DriveShortPID(90));
     		addSequential(new AutoResetDriveEncoders(), .025);
-    		addSequential(new CurveLeft(), .5);
+    		addSequential(new CurveLeft(), .45);
     		addSequential(new ShootCube(), .2);
     		addSequential(new DriveBackward(), .35);
     		addParallel(new TurnPID(-130));

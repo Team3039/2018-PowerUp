@@ -446,6 +446,7 @@ public class Robot extends IterativeRobot {
 //		double cubeDistanceA = 59 * Math.pow(Math.E, (-0.0000168466 * area));
 //		System.out.println("Distance to Cube A : " + cubeDistanceA);
 
+		System.out.println("Robot Angle" + Robot.drivetrain.getAngle());
 	}
 
 

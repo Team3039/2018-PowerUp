@@ -9,8 +9,8 @@ public class DriveShortPID extends PIDSubsystem {
 	public double targetDistance;
 	
 	public static double kP = .029; //.0045
-	public static double kI = .00005; //.0001
-	public static double kD = .044;
+	public static double kI = .0001; //.0001
+	public static double kD = .06;
 	
 	
 /*    public void setPIDValues(double target) {
@@ -57,7 +57,7 @@ public class DriveShortPID extends PIDSubsystem {
         setInputRange(-1000, 1000);
         setOutputRange(-.99, .99);//voltage
         getPIDController().setContinuous(false);
-        setPercentTolerance(.023);
+        setPercentTolerance(.027);
         
       }
 

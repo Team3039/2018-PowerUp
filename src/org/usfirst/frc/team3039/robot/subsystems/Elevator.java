@@ -65,8 +65,8 @@ public class Elevator extends Subsystem {
 			Robot.elevator.stopElevator();
 		}
 		else {
-			elevatorMotorA.set(.905);
-			elevatorMotorB.set(.905);
+			elevatorMotorA.set(.9);
+			elevatorMotorB.set(.9);
 		}
 
 	}

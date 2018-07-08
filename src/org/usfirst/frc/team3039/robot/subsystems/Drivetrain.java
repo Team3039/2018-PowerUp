@@ -48,10 +48,11 @@ public class Drivetrain extends Subsystem {
     //Drive Control 
     public void driveTeleOp(PS4Gamepad gp) {
     //Tele-Op Driving
-        drivetrain.arcadeDrive(gp.getLeftYAxis() * -1, gp.getRightXAxis() * .6);        
+        drivetrain.arcadeDrive(gp.getLeftYAxis() * -1, gp.getRightXAxis() * .65);        
     }
     
     public void driveCurve(double power, double angle) {
+    	
         //Auto Turning    
         getAngle();
         drivetrain.curvatureDrive(power, angle, false);
