@@ -23,7 +23,7 @@ public class SetElevatorSlow extends Command {
     	Robot.elevator.torqueMode();
     	if(Robot.intake.intakeUp == false) {
         	//Robot.elevatorpid.scaleLevel();
-        	Robot.elevator.liftElevatorRamp();
+        	Robot.elevator.liftElevatorRampSlow();
         	Robot.intake.cubeOut();
 
     	}

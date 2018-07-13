@@ -54,8 +54,8 @@ public class Elevator extends Subsystem {
 			Robot.elevator.stopElevator();
 		}
 		else {
-			elevatorMotorA.set(.97);
-			elevatorMotorB.set(.97);
+			elevatorMotorA.set(.9);
+			elevatorMotorB.set(.9);
 		}
 
 	}
@@ -71,7 +71,19 @@ public class Elevator extends Subsystem {
 
 	}
 	
-	public void liftElevatorRamp() {
+	public void liftElevatorRampMid() {
+		if (Robot.elevator.getMax() == false) {
+			Robot.elevator.stopElevator();
+		}
+		else {
+			elevatorMotorA.set(.8);
+			elevatorMotorB.set(.8);
+		}
+
+	}
+	
+	
+	public void liftElevatorRampSlow() {
 		if (Robot.elevator.getMax() == false) {
 			Robot.elevator.stopElevator();
 		}
@@ -92,8 +104,8 @@ public class Elevator extends Subsystem {
 			Robot.elevator.stopElevator();
 		}
 		else {
-			elevatorMotorA.set(-.9);
-			elevatorMotorB.set(-.9);
+			elevatorMotorA.set(-.96);
+			elevatorMotorB.set(-.96);
 		}
 
 	}
@@ -114,7 +126,7 @@ public class Elevator extends Subsystem {
 		elevatorMotorB.set(0);
 	}
 	
-	//Braking
+	//Braking0
 	public void unBrake() {
 		elevatorMotorA.setNeutralMode(NeutralMode.Coast);
 		elevatorMotorB.setNeutralMode(NeutralMode.Coast);

@@ -31,7 +31,11 @@ public class LowerElevator extends Command {
     // Called once after isFinished returns true
     protected void end() {
     	Robot.elevator.stopElevator();
-
+    	Robot.intake.cubeAngleFalse();
+    	Robot.intake.cubeOut();
+    	Robot.elevator.setNotUp();
+    	Robot.elevator.setNotRisen();
+    	Robot.elevator.movingIntake = false;
   
     }
 
@@ -39,6 +43,11 @@ public class LowerElevator extends Command {
     // subsystems is scheduled to run
     protected void interrupted() {
     	Robot.elevator.stopElevator();
+    	Robot.intake.cubeAngleFalse();
+    	Robot.intake.cubeOut();
+    	Robot.elevator.setNotUp();
+    	Robot.elevator.setNotRisen();
+    	Robot.elevator.movingIntake = false;
 
 
 
