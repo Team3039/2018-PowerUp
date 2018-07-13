@@ -1,6 +1,5 @@
 package org.usfirst.frc.team3039.robot.commands;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
@@ -8,7 +7,9 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
  */
 public class AutoTest extends CommandGroup {
     public AutoTest() {
-       	String gameInfo;
+    	addSequential(new Startup(), .1);
+    	addSequential(new AutoPathfinder());
+/*       	String gameInfo;
     	gameInfo = DriverStation.getInstance().getGameSpecificMessage();
 //    	int count = 0;
 //       	while(count < 1000) {
@@ -18,7 +19,7 @@ public class AutoTest extends CommandGroup {
        	if (gameInfo.charAt(0) == 'L' && gameInfo.charAt(1) == 'L') {
     		//System.out.println("I am on the Blue Alliance in the Left Position and should go Scale/SwitchX2 Outside the Zone");
 //    		addSequential(new Startup(), .1);
-//       	addSequential(new AutoCurveLeft(), .45);
+//       	addSequential(new AutoCurveLeft(), .45);O
 //    		addSequential(new AutoResetDrsxiveEncoders(), .1);
 //    		addParallel(new RunElevatorSwitchAuto());
 //    		addSequential(new AutoDriveShortPID(80));
@@ -50,10 +51,10 @@ public class AutoTest extends CommandGroup {
 //    		addSequential(new AutoDriveShortPID(45));
     		addSequential(new AutoDriveShortPID(48));
     		
+*/
 
-
-    	}       	}
-    }
+    }       
+}
 
     
 

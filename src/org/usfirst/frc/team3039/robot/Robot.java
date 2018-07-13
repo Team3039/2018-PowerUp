@@ -5,6 +5,7 @@ import org.usfirst.frc.team3039.robot.commands.AutoCenter;
 import org.usfirst.frc.team3039.robot.commands.AutoForward;
 import org.usfirst.frc.team3039.robot.commands.AutoLeft;
 import org.usfirst.frc.team3039.robot.commands.AutoLeftScale;
+import org.usfirst.frc.team3039.robot.commands.AutoPathfinder;
 import org.usfirst.frc.team3039.robot.commands.AutoRight;
 import org.usfirst.frc.team3039.robot.commands.AutoRightScale;
 import org.usfirst.frc.team3039.robot.commands.AutoScaleInZone;
@@ -111,7 +112,7 @@ public class Robot extends IterativeRobot {
 		chooser.addObject("Right-Scale", new AutoRightScale());
 		chooser.addDefault("Forward", new AutoForward());
 		
-//		chooser.addObject("Test", new AutoTest());
+		chooser.addObject("Test", new AutoTest());
 		chooser.addObject("CAPITAL DE FREEZE", new AutoScaleInZone());
 
 		//Camera
@@ -206,7 +207,7 @@ public class Robot extends IterativeRobot {
 		chooser.addObject("Right-Scale", new AutoRightScale());
 		chooser.addDefault("Forward", new AutoForward());
 //		
-//		chooser.addObject("Test", new AutoTest());
+		chooser.addObject("Test", new AutoTest());
 
 		chooser.addObject("CAPITAL DE FREEZE", new AutoScaleInZone());
 
@@ -235,7 +236,7 @@ public class Robot extends IterativeRobot {
 		chooser.addObject("Right-Scale", new AutoRightScale());
 		chooser.addObject("Forward", new AutoForward());
 //				
-//		chooser.addObject("Test", new AutoTest());
+		chooser.addObject("Test", new AutoTest());
 		chooser.addObject("CAPITAL DE FREEZE", new AutoScaleInZone());
 
 	}
@@ -270,7 +271,8 @@ public class Robot extends IterativeRobot {
 //		System.out.println("Distance to Cube A : " + cubeDistanceA);
 //		System.out.println("Distance to Cube B :" + cubeDistance);
 //		System.out.println("ANGLE : " + Robot.drivetrain.getAngle());
-//		System.out.println("DISTANCE : " + Robot.drivetrain.getDistance());
+//		System.out.println("Left : " + Robot.drivetrain.leftEnc.getDistance());
+//		System.out.println("Right : " + Robot.drivetrain.rightEnc.getDistance());
 	}
 
 

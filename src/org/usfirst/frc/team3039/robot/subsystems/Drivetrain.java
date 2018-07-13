@@ -40,7 +40,7 @@ public class Drivetrain extends Subsystem {
     
     //Driving Encoder
     public Encoder leftEnc = new Encoder(RobotMap.leftEncoderA, RobotMap.leftEncoderB, false);
-    public Encoder rightEnc = new Encoder(RobotMap.leftEncoderA, RobotMap.rightEncoderB, false);
+    public Encoder rightEnc = new Encoder(RobotMap.rightEncoderA, RobotMap.rightEncoderB, false);
     
     //Gyro
     public AHRS navX = new AHRS(SPI.Port.kMXP);
@@ -81,27 +81,32 @@ public class Drivetrain extends Subsystem {
 	public EncoderFollower right = new EncoderFollower(modifier.getRightTrajectory());
 	
     public void setupPF() {
-    	left.configurePIDVA(1.0, 0.0, 1.0, 1 / .9, 0);
+    	left.configurePIDVA(1.0, 0.0, 0.0, 1 / .9, 0);
 
-    	left.configureEncoder((int)leftEnc.getDistance(), 1440, 6);
-    	right.configureEncoder((int)rightEnc.getDistance(), 1440, 6);
+    	left.configureEncoder((int)leftEnc.get(), 1440, 0.1524);
+    	right.configureEncoder((int)rightEnc.get(), 1440, 0.1524);
+    	
     }
     
     public void runPF() {
-    	double l = left.calculate((int)(leftEnc.getDistance()));
-    	double r = right.calculate((int)(rightEnc.getDistance()));
+    	double l = left.calculate((int)(leftEnc.get()));
+    	double r = right.calculate((int)(rightEnc.get()));
 
-    	double gyro_heading = navX.getYaw();  
+    	double gyro_heading = getAngle();  
     	double desired_heading = Pathfinder.r2d(left.getHeading()); 
 
     	double angleDifference = Pathfinder.boundHalfDegrees(desired_heading - gyro_heading);
     	double turn = 0.8 * (-1.0/80.0) * angleDifference;
     	
-    	frontleftMotor.set(ControlMode.PercentOutput, l + turn); //https://github.com/Team254/FRC-2017-Public.git
-    	rearleftMotor.set(ControlMode.PercentOutput, l + turn);
-    	frontrightMotor.set(ControlMode.PercentOutput, r - turn);
-    	frontrightMotor.set(ControlMode.PercentOutput, r - turn);
+//    	frontleftMotor.set(ControlMode.PercentOutput, l + turn); //https://github.com/Team254/FRC-2017-Public.git
+//    	rearleftMotor.set(ControlMode.PercentOutput, l + turn);
+//    	frontrightMotor.set(ControlMode.PercentOutput, r - turn);
+//    	frontrightMotor.set(ControlMode.PercentOutput, r - turn);
+
+
+
     }
+    
     public void driveStraight(double power) {
     //Auto Driving
             if(power < 0) {
