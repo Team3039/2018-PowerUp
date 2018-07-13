@@ -82,12 +82,15 @@ public class OI {
 		
 		//Pilot Controls
 		
-		buttonSquare.toggleWhenPressed(new GetCube());
-		buttonTriangle.toggleWhenPressed(new SetIntakeTurn());
-		buttonX.toggleWhenPressed(new SetIntakeUp());
-		buttonCircle.toggleWhenPressed(new SetIntakeAngle());
+//		buttonSquare.toggleWhenPressed(new GetCube());
+//		buttonTriangle.toggleWhenPressed(new SetIntakeTurn());
+//		buttonX.toggleWhenPressed(new SetIntakeUp());
+//		buttonCircle.toggleWhenPressed(new SetIntakeAngle());
 		
-
+		buttonX.whenPressed(new RunElevatorIntake());
+		buttonSquare.whenPressed(new RunElevatorSwitch());
+		buttonTriangle.whenPressed(new RunElevatorScale());
+		buttonCircle.toggleWhenPressed(new GetCube());
 		
 		R2.whileHeld(new LiftIntake());
 		L2.whileHeld(new LowerIntake());

@@ -5,13 +5,11 @@ package org.usfirst.frc.team3039.robot;
 import org.usfirst.frc.team3039.robot.commands.AutoCenterScale;
 import org.usfirst.frc.team3039.robot.commands.AutoCenterSwitch;
 import org.usfirst.frc.team3039.robot.commands.AutoForward;
-import org.usfirst.frc.team3039.robot.commands.AutoLeftScale;
 import org.usfirst.frc.team3039.robot.commands.AutoLeftSideScaleClose;
 import org.usfirst.frc.team3039.robot.commands.AutoLeftSideScaleCompatible;
 import org.usfirst.frc.team3039.robot.commands.AutoLeftSideScaleFar;
 import org.usfirst.frc.team3039.robot.commands.AutoLeftSideScaleSwitchClose;
 import org.usfirst.frc.team3039.robot.commands.AutoLeftSideScaleSwitchFar;
-import org.usfirst.frc.team3039.robot.commands.AutoRightScale;
 import org.usfirst.frc.team3039.robot.commands.AutoRightSideScaleClose;
 import org.usfirst.frc.team3039.robot.commands.AutoRightSideScaleCompatible;
 import org.usfirst.frc.team3039.robot.commands.AutoRightSideScaleFar;
@@ -139,8 +137,6 @@ public class Robot extends IterativeRobot {
 	Command AutoRightScaleSwitchFar = new AutoRightSideScaleSwitchFar();
 	Command AutoForward = new AutoForward();
 	
-	
-	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void robotInit() {
@@ -164,13 +160,11 @@ public class Robot extends IterativeRobot {
 		intake.intakeUp();
 		
 		//Auto Setup
-/*		sideSelector = new SendableChooser();
+		sideSelector = new SendableChooser();
 		autoSelector = new SendableChooser();
-		adaptableSelector = new SendableChooser();*/
-		chooser = new SendableChooser<CommandGroup>();
-
+		adaptableSelector = new SendableChooser();
 		
-/*		sideSelector.addDefault("Center", robotSide.Center);
+		sideSelector.addDefault("Center", robotSide.Center);
 		sideSelector.addObject("Left", robotSide.Left);
 		sideSelector.addObject("Right", robotSide.Right);
 		
@@ -183,14 +177,7 @@ public class Robot extends IterativeRobot {
 		
 		SmartDashboard.putData("Side Slecetor", sideSelector);
 		SmartDashboard.putData("Auto Selector", autoSelector);
-		SmartDashboard.putData("Compatible", adaptableSelector);*/
-		
-		chooser.addDefault("Forward", new AutoForward());
-		chooser.addObject("Left", new AutoLeftScale());
-		chooser.addObject("Right", new AutoRightScale());
-		chooser.addObject("Center Switch", new AutoCenterSwitch());
-		chooser.addObject("Comptaible Left", new AutoLeftSideScaleCompatible());
-		chooser.addObject("Compatible Right", new AutoRightSideScaleCompatible());
+		SmartDashboard.putData("Compatible", adaptableSelector);
 
 		//Camera Setup
 		//http://roborio-3039-frc.local:1181/?action=stream

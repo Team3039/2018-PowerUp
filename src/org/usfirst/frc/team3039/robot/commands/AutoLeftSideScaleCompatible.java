@@ -27,8 +27,6 @@ public class AutoLeftSideScaleCompatible extends CommandGroup {
                 		addSequential(new AutoResetDriveEncoders(), .0001);
                 	    addSequential(new TurnPID(25), .58);
                 	    addSequential(new ShootCube(), .2);
-                	    addParallel(new DrivePID(-150));
-                	    addSequential(new SetElevatorIntake());
 
                 	}
                 	
@@ -51,8 +49,6 @@ public class AutoLeftSideScaleCompatible extends CommandGroup {
                 		addSequential(new AutoResetDriveEncoders(), .0001);
                 	    addSequential(new TurnPID(25), .58);
                 	    addSequential(new ShootCube(), .2);
-                	    addParallel(new DrivePID(-150));
-                	    addSequential(new SetElevatorIntake());
 
                 	}
                 	
@@ -63,7 +59,7 @@ public class AutoLeftSideScaleCompatible extends CommandGroup {
                 		addSequential(new AutoResetDriveEncoders(), .0001);
                 	 	addSequential(new TurnPID(85)); // Turn To Switch
                 		addSequential(new AutoResetDriveEncoders(), .0001);
-                	 	addSequential(new DrivePID(100));
+                	 	addSequential(new DrivePID(125));
                 	}
                	}
                	else {

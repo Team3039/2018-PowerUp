@@ -54,8 +54,8 @@ public class Elevator extends Subsystem {
 			Robot.elevator.stopElevator();
 		}
 		else {
-			elevatorMotorA.set(.9);
-			elevatorMotorB.set(.9);
+			elevatorMotorA.set(.97);
+			elevatorMotorB.set(.97);
 		}
 
 	}
@@ -92,8 +92,8 @@ public class Elevator extends Subsystem {
 			Robot.elevator.stopElevator();
 		}
 		else {
-			elevatorMotorA.set(-.97);
-			elevatorMotorB.set(-.97);
+			elevatorMotorA.set(-.9);
+			elevatorMotorB.set(-.9);
 		}
 
 	}

@@ -16,15 +16,11 @@ public class LowerElevator extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.elevator.movingElevator();
-    	Robot.elevator.movingScale = false;
-    	Robot.elevator.movingSwitch = false;
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	Robot.elevator.lowerElevator();
-
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -35,11 +31,6 @@ public class LowerElevator extends Command {
     // Called once after isFinished returns true
     protected void end() {
     	Robot.elevator.stopElevator();
-    	Robot.intake.cubeAngleFalse();
-    	Robot.intake.cubeOut();
-    	Robot.elevator.setNotUp();
-    	Robot.elevator.setNotRisen();
-    	Robot.elevator.movingIntake = false;
 
   
     }
@@ -48,11 +39,6 @@ public class LowerElevator extends Command {
     // subsystems is scheduled to run
     protected void interrupted() {
     	Robot.elevator.stopElevator();
-    	Robot.intake.cubeAngleFalse();
-    	Robot.intake.cubeOut();
-    	Robot.elevator.setNotUp();
-    	Robot.elevator.setNotRisen();
-    	Robot.elevator.movingIntake = false;
 
 
 
