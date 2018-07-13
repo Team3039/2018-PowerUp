@@ -34,7 +34,7 @@ public class Drivetrain extends Subsystem {
     
     //Driving Encoder
     public Encoder leftEnc = new Encoder(RobotMap.leftEncoderA, RobotMap.leftEncoderB, false);
-    public Encoder rightEnc = new Encoder(RobotMap.rightEncoderA, RobotMap.rightEncoderA, false);
+    public Encoder rightEnc = new Encoder(RobotMap.rightEncoderA, RobotMap.rightEncoderB, false);
     
     //Gyro
     public AHRS navX = new AHRS(SPI.Port.kMXP);

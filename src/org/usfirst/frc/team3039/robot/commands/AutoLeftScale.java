@@ -21,33 +21,35 @@ public class AutoLeftScale extends CommandGroup {
                	//In the Left Position on the Blue Alliance and you are scoring Outside the Zone with the gameInfo ""	    	
                 	if (gameInfo.charAt(0) == 'L' && gameInfo.charAt(1) == 'L') {
                 		//System.out.println("I am on the Blue Alliance in the Left Position and should go Scale/SwitchX2 Outside the Zone");
-            			addSequential(new Startup(), .001);
-                	    addParallel(new AutoDrivePID(278));
+                    	addSequential(new Startup(), .00001);
+                	    addParallel(new AutoDrivePID(264));
                 	    addSequential(new RunElevatorScaleAuto());
-                	    addSequential(new AutoTurnPID(25), .58);
+                	    addSequential(new AutoTurnPID(25), .45);
                 	    addSequential(new ShootCube(), .2);
-//                	    addSequential(new DriveBackward(), .2);
-                	    addSequential(new AutoResetDriveEncoders(), .001);
+                	    addSequential(new AutoResetDriveEncoders(), .0001);
                 	    addParallel(new SetElevatorIntakeAuto());
-                		addSequential(new AutoTurnPIDLong(125.5));//Curve
-                	    addSequential(new AutoResetDriveEncoders(), .001);
-                	    addParallel(new AutoDriveShortPID(44));
-                		addSequential(new GetCube(), 2);
-                		addSequential(new AutoResetDriveEncoders(), .001);
-                		addParallel(new AutoTurnPIDLong(194.5));//Curve
-                	    addSequential(new RunElevatorScaleAuto());
-                	    addSequential(new AutoDriveShortPID(42));
+                		addSequential(new AutoTurnPIDLong(125));//Curve
+                	    addSequential(new AutoResetDriveEncoders(), .0001);
+                		addParallel(new AutoDriveShortPID(36.5));
+                		addSequential(new GetCube(), 1.55);
+                	    addSequential(new AutoResetDriveEncoders(), .0001);
+                		addParallel(new RunElevatorScaleAuto());
+                		addSequential(new AutoTurnPIDLong(218));
+                	    addSequential(new AutoResetDriveEncoders(), .0001);
+                		addSequential(new AutoDriveShortPID(35));
                 	    addSequential(new ShootCube(), .2);
-                		addSequential(new AutoResetDriveEncoders(), .025);
-                	    addParallel(new SetElevatorIntakeAuto());
-                		addSequential(new AutoTurnPIDLong(130));//Curve
-                		addSequential(new AutoResetDriveEncoders(), .025);
-//                		addSequential(new AutoDrivePID(50));
-//                	  	addParallel(new GetCube(), 2);
-//                		addSequential(new AutoTurnPIDLong(200));//Curve 	//Three Cube
-//                	    addParallel(new AutoDrivePID(46));
-//                	    addSequential(new RunElevatorScaleAuto());
-//                	    addSequential(new ShootCubeSlow());
+                	    addSequential(new AutoResetDriveEncoders(), .0001);
+//                		addParallel(new TurnPIDLong(108));//Curve
+//                		addSequential(new SetElevatorIntakeAuto());
+//                	    addSequential(new AutoResetDriveEncoders(), .0001);
+//                		addParallel(new DriveShortPID(39));
+//                		addSequential(new GetCube(), 1.9);
+//                	    addSequential(new AutoResetDriveEncoders(), .0001);
+//                		addParallel(new RunElevatorScaleAuto());
+//                		addSequential(new TurnPIDLong(180));
+//                		addSequential(new DriveShortPID(35));
+
+//                	    addSequential(new ShootCubeSlow(), .2);
 
 
 
@@ -82,33 +84,35 @@ public class AutoLeftScale extends CommandGroup {
                 	
                 	else if (gameInfo.charAt(0) == 'R' && gameInfo.charAt(1) == 'L') {
                 		//System.out.println("I am on the Blue Alliance in the Left Position and should go Scale/Switch Outside the Zone");
-            			addSequential(new Startup(), .001);
-                	    addParallel(new AutoDrivePID(278));
+                    	addSequential(new Startup(), .00001);
+                	    addParallel(new AutoDrivePID(264));
                 	    addSequential(new RunElevatorScaleAuto());
-                	    addSequential(new AutoTurnPID(25), .58);
+                	    addSequential(new AutoTurnPID(25), .45);
                 	    addSequential(new ShootCube(), .2);
-//                	    addSequential(new DriveBackward(), .2);
-                	    addSequential(new AutoResetDriveEncoders(), .001);
+                	    addSequential(new AutoResetDriveEncoders(), .0001);
                 	    addParallel(new SetElevatorIntakeAuto());
-                		addSequential(new AutoTurnPIDLong(125.5));//Curve
-                	    addSequential(new AutoResetDriveEncoders(), .001);
-                	    addParallel(new AutoDriveShortPID(44));
-                		addSequential(new GetCube(), 2);
-                		addSequential(new AutoResetDriveEncoders(), .001);
-                		addParallel(new AutoTurnPIDLong(194.5));//Curve
-                	    addSequential(new RunElevatorScaleAuto());
-                	    addSequential(new AutoDriveShortPID(42));
+                		addSequential(new AutoTurnPIDLong(125));//Curve
+                	    addSequential(new AutoResetDriveEncoders(), .0001);
+                		addParallel(new AutoDriveShortPID(36.5));
+                		addSequential(new GetCube(), 1.55);
+                	    addSequential(new AutoResetDriveEncoders(), .0001);
+                		addParallel(new RunElevatorScaleAuto());
+                		addSequential(new AutoTurnPIDLong(218));
+                	    addSequential(new AutoResetDriveEncoders(), .0001);
+                		addSequential(new AutoDriveShortPID(35));
                 	    addSequential(new ShootCube(), .2);
-                		addSequential(new AutoResetDriveEncoders(), .025);
-                	    addParallel(new SetElevatorIntakeAuto());
-                		addSequential(new AutoTurnPIDLong(130));//Curve
-                		addSequential(new AutoResetDriveEncoders(), .025);
-//                		addSequential(new AutoDrivePID(50));
-//                	  	addParallel(new GetCube(), 2);
-//                		addSequential(new AutoTurnPIDLong(200));//Curve 	//Three Cube
-//                	    addParallel(new AutoDrivePID(46));
-//                	    addSequential(new RunElevatorScaleAuto());
-//                	    addSequential(new ShootCubeSlow());
+                	    addSequential(new AutoResetDriveEncoders(), .0001);
+//                		addParallel(new TurnPIDLong(108));//Curve
+//                		addSequential(new SetElevatorIntakeAuto());
+//                	    addSequential(new AutoResetDriveEncoders(), .0001);
+//                		addParallel(new DriveShortPID(39));
+//                		addSequential(new GetCube(), 1.9);
+//                	    addSequential(new AutoResetDriveEncoders(), .0001);
+//                		addParallel(new RunElevatorScaleAuto());
+//                		addSequential(new TurnPIDLong(180));
+//                		addSequential(new DriveShortPID(35));
+
+//                	    addSequential(new ShootCubeSlow(), .2);
 
 
 
