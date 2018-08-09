@@ -9,23 +9,25 @@ public class AutoLeftSideScaleClose extends CommandGroup {
 
     public AutoLeftSideScaleClose() {    	
     	addSequential(new Startup(), .00001);
-	    addParallel(new DrivePID(264));
+	    addParallel(new DrivePID(270));
 	    addSequential(new RunElevatorScaleAuto());
-	    addSequential(new TurnPID(25), .45);
+	    addParallel(new TurnPID(45), .5);
+	    addSequential(new GetCube(), 1);
+	    addSequential(new DriveShortPID(34),.1);
 	    addSequential(new ShootCube(), .2);
-	    addSequential(new AutoResetDriveEncoders(), .0001);
+/*	    addSequential(new AutoResetDriveEncoders(), .0001);
 	    addParallel(new SetElevatorIntakeAuto());
-		addSequential(new TurnPIDLong(125));//Curve
+		addSequential(new TurnPIDLong(145));//Curve
 	    addSequential(new AutoResetDriveEncoders(), .0001);
-		addParallel(new DriveShortPID(36.5));
-		addSequential(new GetCube(), 1.55);
-	    addSequential(new AutoResetDriveEncoders(), .0001);
+		addParallel(new DriveShortPID(40));
+		addSequential(new GetCube(), 2);*/
+/*	    addSequential(new AutoResetDriveEncoders(), .0001);
 		addParallel(new RunElevatorScaleAuto());
-		addSequential(new TurnPIDLong(218));
+		addSequential(new TurnPIDLong(150));
 	    addSequential(new AutoResetDriveEncoders(), .0001);
 		addSequential(new DriveShortPID(35));
 	    addSequential(new ShootCube(), .2);
-	    addSequential(new AutoResetDriveEncoders(), .0001);
+	    addSequential(new AutoResetDriveEncoders(), .0001);*/
 //		addParallel(new TurnPIDLong(108));//Curve
 //		addSequential(new SetElevatorIntakeAuto());
 //	    addSequential(new AutoResetDriveEncoders(), .0001);

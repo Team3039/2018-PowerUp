@@ -164,12 +164,12 @@ public class Robot extends IterativeRobot {
 		autoSelector = new SendableChooser();
 		adaptableSelector = new SendableChooser();
 		
-		sideSelector.addDefault("Center", robotSide.Center);
-		sideSelector.addObject("Left", robotSide.Left);
+		sideSelector.addDefault("Left", robotSide.Left);
+		sideSelector.addObject("Center", robotSide.Center);
 		sideSelector.addObject("Right", robotSide.Right);
 		
-		autoSelector.addDefault("Switch", robotAuto.Switch);
-		autoSelector.addObject("Scale", robotAuto.Scale);
+		autoSelector.addDefault("Scale", robotAuto.Scale);
+		autoSelector.addObject("Switch", robotAuto.Switch);
 		autoSelector.addObject("Scale-Switch", robotAuto.ScaleToSwitch);
 		
 		adaptableSelector.addDefault("No", autoCompatible.False);

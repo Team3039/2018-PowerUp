@@ -113,7 +113,7 @@ public class SetIntakePosition extends Command {
     	}
     	
     	else if (Robot.intake.cubeIn == false && (Robot.intake.cubeAngle == false) && (Robot.intake.cubeVault == false) && (Robot.intake.cubeScored == false) && (Robot.intake.cubeTurn == false) && (Robot.intake.cubePush == false)){
-    		Robot.intakepid.setIntakePosition(285);
+    		Robot.intakepid.setIntakePosition(295);
     		//System.out.println("No Cube Straight");
     		Robot.intake.intakeDown();
     	}
