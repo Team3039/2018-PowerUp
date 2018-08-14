@@ -2,19 +2,11 @@
 package org.usfirst.frc.team3039.robot;
 
 
-import org.usfirst.frc.team3039.robot.commands.AutoCenterScale;
-import org.usfirst.frc.team3039.robot.commands.AutoCenterSwitch;
 import org.usfirst.frc.team3039.robot.commands.AutoForward;
-import org.usfirst.frc.team3039.robot.commands.AutoLeftSideScaleClose;
-import org.usfirst.frc.team3039.robot.commands.AutoLeftSideScaleCompatible;
-import org.usfirst.frc.team3039.robot.commands.AutoLeftSideScaleFar;
-import org.usfirst.frc.team3039.robot.commands.AutoLeftSideScaleSwitchClose;
-import org.usfirst.frc.team3039.robot.commands.AutoLeftSideScaleSwitchFar;
-import org.usfirst.frc.team3039.robot.commands.AutoRightSideScaleClose;
-import org.usfirst.frc.team3039.robot.commands.AutoRightSideScaleCompatible;
-import org.usfirst.frc.team3039.robot.commands.AutoRightSideScaleFar;
-import org.usfirst.frc.team3039.robot.commands.AutoRightSideScaleSwitchClose;
-import org.usfirst.frc.team3039.robot.commands.AutoRightSideScaleSwitchFar;
+import org.usfirst.frc.team3039.robot.commands.AutoLeftScale;
+import org.usfirst.frc.team3039.robot.commands.AutoLeftSwitch;
+import org.usfirst.frc.team3039.robot.commands.AutoRightScale;
+import org.usfirst.frc.team3039.robot.commands.AutoRightSwitch;
 import org.usfirst.frc.team3039.robot.subsystems.Climber;
 import org.usfirst.frc.team3039.robot.subsystems.DrivePID;
 import org.usfirst.frc.team3039.robot.subsystems.DriveShortPID;
@@ -75,26 +67,6 @@ public class Robot extends IterativeRobot {
 	public static double shootCube; //Speed we Shoot the Cube At
 	public static double area;
 	
-	//Field Status	
-	private enum robotSide{
-		Left,
-		Right,
-		Center,
-	}
-	
-	private enum robotAuto{
-		Switch,
-		Scale,
-		ScaleToSwitch,
-		
-	}
-	
-	private enum autoCompatible{
-		True,
-		False,
-		
-	}
-	
 	static String gameInfo = "" ;
 
 	
@@ -110,32 +82,6 @@ public class Robot extends IterativeRobot {
 	
 	public static double  cubeDistance; //How Far Away the Cube is
 
-	
-	//Utilizing Vision Array
-	/*This is where we make everything necessary to use the vision system that we set up. 
-	 * Later in the program we use these variable to control different parts of the Robot Vision to it's best ability
-	 * cubeDistance determines the Distance from the Robot to the Cube which we made a double because that's how the Number Returns
-	 * */
-	
-	//Autonomous Options
-			
-	SendableChooser sideSelector;
-	SendableChooser autoSelector;
-	SendableChooser adaptableSelector;
-	
-	Command AutoLeftScaleClose = new AutoLeftSideScaleClose();
-	Command AutoLeftScaleFar = new AutoLeftSideScaleFar();
-	Command AutoRightScaleClose = new AutoRightSideScaleClose();
-	Command AutoRightScaleFar = new AutoRightSideScaleFar();
-	Command AutoCenterSwitch = new AutoCenterSwitch();
-	Command AutoCenterScale = new AutoCenterScale();
-	Command AutoCompatibleLeft = new AutoLeftSideScaleCompatible();
-	Command AutoCompatibleRight = new AutoRightSideScaleCompatible();
-	Command AutoLeftScaleSwitchClose = new AutoLeftSideScaleSwitchClose();
-	Command AutoLeftScaleSwitchFar = new AutoLeftSideScaleSwitchFar();
-	Command AutoRightScaleSwitchClose = new AutoRightSideScaleSwitchClose();
-	Command AutoRightScaleSwitchFar = new AutoRightSideScaleSwitchFar();
-	Command AutoForward = new AutoForward();
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
@@ -159,25 +105,14 @@ public class Robot extends IterativeRobot {
 		intake.resetIntakeEncoder();
 		intake.intakeUp();
 		
-		//Auto Setup
-		sideSelector = new SendableChooser();
-		autoSelector = new SendableChooser();
-		adaptableSelector = new SendableChooser();
-		
-		sideSelector.addDefault("Left", robotSide.Left);
-		sideSelector.addObject("Center", robotSide.Center);
-		sideSelector.addObject("Right", robotSide.Right);
-		
-		autoSelector.addDefault("Scale", robotAuto.Scale);
-		autoSelector.addObject("Switch", robotAuto.Switch);
-		autoSelector.addObject("Scale-Switch", robotAuto.ScaleToSwitch);
-		
-		adaptableSelector.addDefault("No", autoCompatible.False);
-		adaptableSelector.addObject("Yes", autoCompatible.True);
-		
-		SmartDashboard.putData("Side Slecetor", sideSelector);
-		SmartDashboard.putData("Auto Selector", autoSelector);
-		SmartDashboard.putData("Compatible", adaptableSelector);
+		//Auto Chooser
+		chooser = new SendableChooser();		
+		chooser.addDefault("Forward", new AutoForward());
+		chooser.addObject("RIGHT Scale", new AutoRightScale());
+		chooser.addObject("RIGHT Switch", new AutoRightSwitch());
+		chooser.addObject("LEFT Scale", new AutoLeftScale());
+		chooser.addObject("LEFT Switch", new AutoLeftSwitch());
+		SmartDashboard.putData("Auto Selector", chooser);
 
 		//Camera Setup
 		//http://roborio-3039-frc.local:1181/?action=stream
@@ -213,6 +148,7 @@ public class Robot extends IterativeRobot {
 	
 	@Override
 	public void disabledInit() {
+		Robot.intake.resetIntakeEncoder();
 		Robot.elevator.resetElevatorEncoder();
 		Robot.drivetrain.resetNavX();
 		Robot.drivetrain.resetEncoder();
@@ -232,178 +168,14 @@ public class Robot extends IterativeRobot {
 		String gameData = DriverStation.getInstance().getGameSpecificMessage();
 		
 		if(gameData != null) {
-			gameData = DriverStation.getInstance().getGameSpecificMessage().substring(0, 2); //From 
+			gameData = DriverStation.getInstance().getGameSpecificMessage().substring(0, 2); 
 		}
 			else {
 			  System.out.println("No Game Data");
 			  gameData = "";
 		}
 		
-	switch (gameData) {
-		case "LR":
-			if(sideSelector.getSelected().equals(robotSide.Left)) {
-				if (autoSelector.getSelected().equals(robotAuto.Scale) && adaptableSelector.getSelected().equals(autoCompatible.False)) {
-						autoCommand = AutoLeftScaleFar;
-				}
-				
-				if(autoSelector.getSelected().equals(robotAuto.Scale) && adaptableSelector.getSelected().equals(autoCompatible.True)) {
-						autoCommand = AutoCompatibleLeft;
-				}
-				
-				if(autoSelector.getSelected().equals(robotAuto.ScaleToSwitch)) {
-						autoCommand = AutoLeftScaleSwitchFar;
-				}
-			}
-			else if(sideSelector.getSelected().equals(robotSide.Right)) {
-				if (autoSelector.getSelected().equals(robotAuto.Scale) && adaptableSelector.getSelected().equals(autoCompatible.False)) {
-					autoCommand = AutoRightScaleClose;
-				}
-				
-				if(autoSelector.getSelected().equals(robotAuto.Scale) && adaptableSelector.getSelected().equals(autoCompatible.True)) {
-					autoCommand = AutoCompatibleRight;
-				}
-				
-				if(autoSelector.getSelected().equals(robotAuto.ScaleToSwitch)) {
-					autoCommand = AutoRightScaleSwitchClose;
-				}
-			}
-			
-			else if(sideSelector.getSelected().equals(robotSide.Center)) {
-				if(autoSelector.getSelected().equals(robotAuto.Switch)) {
-					autoCommand = AutoCenterSwitch;
-				}
-				
-				if(autoSelector.getSelected().equals(robotAuto.Scale)) {
-					autoCommand = AutoCenterScale;
 
-				}
-			}
-			break;
-			
-		case "RL":
-			if(sideSelector.getSelected().equals(robotSide.Left)) {
-				if (autoSelector.getSelected().equals(robotAuto.Scale) && adaptableSelector.getSelected().equals(autoCompatible.False)) {
-						autoCommand = AutoLeftScaleClose;
-				}
-				
-				if(autoSelector.getSelected().equals(robotAuto.Scale) && adaptableSelector.getSelected().equals(autoCompatible.True)) {
-						autoCommand = AutoCompatibleLeft;
-				}
-				
-				if(autoSelector.getSelected().equals(robotAuto.ScaleToSwitch)) {
-						autoCommand = AutoLeftScaleSwitchClose;
-				}
-			}
-			else if(sideSelector.getSelected().equals(robotSide.Right)) {
-				if (autoSelector.getSelected().equals(robotAuto.Scale) && adaptableSelector.getSelected().equals(autoCompatible.False)) {
-					autoCommand = AutoRightScaleFar;
-				}
-				
-				if(autoSelector.getSelected().equals(robotAuto.Scale) && adaptableSelector.getSelected().equals(autoCompatible.True)) {
-					autoCommand = AutoCompatibleRight;
-				}
-				
-				if(autoSelector.getSelected().equals(robotAuto.ScaleToSwitch)) {
-					autoCommand = AutoRightScaleSwitchFar;
-				}
-			}
-			
-			else if(sideSelector.getSelected().equals(robotSide.Center)) {
-				if(autoSelector.getSelected().equals(robotAuto.Switch)) {
-					autoCommand = AutoCenterSwitch;
-				}
-				
-				if(autoSelector.getSelected().equals(robotAuto.Scale)) {
-					autoCommand = AutoCenterScale;
-
-				}
-			}
-			break;
-			
-		case "LL":
-			if(sideSelector.getSelected().equals(robotSide.Left)) {
-				if (autoSelector.getSelected().equals(robotAuto.Scale) && adaptableSelector.getSelected().equals(autoCompatible.False)) {
-						autoCommand = AutoLeftScaleClose;
-				}
-				
-				if(autoSelector.getSelected().equals(robotAuto.Scale) && adaptableSelector.getSelected().equals(autoCompatible.True)) {
-						autoCommand = AutoCompatibleLeft;
-				}
-				
-				if(autoSelector.getSelected().equals(robotAuto.ScaleToSwitch)) {
-						autoCommand = AutoLeftScaleSwitchClose;
-				}
-			}
-			else if(sideSelector.getSelected().equals(robotSide.Right)) {
-				if (autoSelector.getSelected().equals(robotAuto.Scale) && adaptableSelector.getSelected().equals(autoCompatible.False)) {
-					autoCommand = AutoRightScaleFar;
-				}
-				
-				if(autoSelector.getSelected().equals(robotAuto.Scale) && adaptableSelector.getSelected().equals(autoCompatible.True)) {
-					autoCommand = AutoCompatibleRight;
-				}
-				
-				if(autoSelector.getSelected().equals(robotAuto.ScaleToSwitch)) {
-					autoCommand = AutoRightScaleSwitchFar;
-				}
-			}
-			
-			else if(sideSelector.getSelected().equals(robotSide.Center)) {
-				if(autoSelector.getSelected().equals(robotAuto.Switch)) {
-					autoCommand = AutoCenterSwitch;
-				}
-				
-				if(autoSelector.getSelected().equals(robotAuto.Scale)) {
-					autoCommand = AutoCenterScale;
-
-				}
-			}
-			break;
-			
-		case "RR":
-			if(sideSelector.getSelected().equals(robotSide.Left)) {
-				if (autoSelector.getSelected().equals(robotAuto.Scale) && adaptableSelector.getSelected().equals(autoCompatible.False)) {
-						autoCommand = AutoLeftScaleFar;
-				}
-				
-				if(autoSelector.getSelected().equals(robotAuto.Scale) && adaptableSelector.getSelected().equals(autoCompatible.True)) {
-						autoCommand = AutoCompatibleLeft;
-				}
-				
-				if(autoSelector.getSelected().equals(robotAuto.ScaleToSwitch)) {
-						autoCommand = AutoLeftScaleSwitchFar;
-				}
-			}
-			else if(sideSelector.getSelected().equals(robotSide.Right)) {
-				if (autoSelector.getSelected().equals(robotAuto.Scale) && adaptableSelector.getSelected().equals(autoCompatible.False)) {
-					autoCommand = AutoRightScaleClose;
-				}
-				
-				if(autoSelector.getSelected().equals(robotAuto.Scale) && adaptableSelector.getSelected().equals(autoCompatible.True)) {
-					autoCommand = AutoCompatibleRight;
-				}
-				
-				if(autoSelector.getSelected().equals(robotAuto.ScaleToSwitch)) {
-					autoCommand = AutoRightScaleSwitchClose;
-				}
-			}
-			
-			else if(sideSelector.getSelected().equals(robotSide.Center)) {
-				if(autoSelector.getSelected().equals(robotAuto.Switch)) {
-					autoCommand = AutoCenterSwitch;
-				}
-				
-				if(autoSelector.getSelected().equals(robotAuto.Scale)) {
-					autoCommand = AutoCenterScale;
-
-				}
-			}
-			break;
-			
-		default:
-			autoCommand = new AutoForward();
-			break;
-	}
 	
 	autoCommand.start();
 	SmartDashboard.putString("Chosen Auto", autoCommand.toString());	

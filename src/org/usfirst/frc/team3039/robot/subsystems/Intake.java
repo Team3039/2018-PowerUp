@@ -7,6 +7,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -32,8 +33,7 @@ public class Intake extends Subsystem {
 	public Encoder intakeEncoder = new Encoder(RobotMap.intakeEncoderA, RobotMap.intakeEncoderB, true);
 
 	public DigitalInput cubeSwitch = new DigitalInput(RobotMap.cubeSwitch);
-	
-	
+		
 
 	//Intake
 	public void motorSafety(boolean enabled) {

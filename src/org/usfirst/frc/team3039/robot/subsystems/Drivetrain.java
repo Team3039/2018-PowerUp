@@ -48,7 +48,7 @@ public class Drivetrain extends Subsystem {
     //Drive Control 
     public void driveTeleOp(PS4Gamepad gp) {
     //Tele-Op Driving
-        drivetrain.arcadeDrive(gp.getLeftYAxis() * -1, gp.getRightXAxis() * .8);        
+        drivetrain.arcadeDrive(gp.getLeftYAxis() * -.95, gp.getRightXAxis() * .68);        
     }
     
     public void driveCurve(double power, double angle) {

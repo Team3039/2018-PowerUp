@@ -5,9 +5,9 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 /**
  *
  */
-public class AutoLeftSideScaleClose extends CommandGroup {
+public class AutoLeftScale extends CommandGroup {
 
-    public AutoLeftSideScaleClose() {    	
+    public AutoLeftScale() {    	
     	addSequential(new Startup(), .00001);
 	    addParallel(new DrivePID(270));
 	    addSequential(new RunElevatorScaleAuto());

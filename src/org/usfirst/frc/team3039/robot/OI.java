@@ -81,18 +81,12 @@ public class OI {
 	
 	public OI() {
 		
-		//Pilot Controls
+//Pilot Controls
 		
 		buttonSquare.toggleWhenPressed(new GetCube());
-		buttonTriangle.toggleWhenPressed(new SetIntakeTurn());
 		buttonX.toggleWhenPressed(new SetIntakeUp());
-		buttonCircle.toggleWhenPressed(new SetIntakeAngle());
-		
-//		buttonX.whenPressed(new RunElevatorIntake());
-//		buttonSquare.whenPressed(new RunElevatorSwitch());
-//		buttonTriangle.whenPressed(new RunElevatorScale());
-//		buttonCircle.toggleWhenPressed(new GetCube());
-		
+		buttonTriangle.toggleWhenPressed(new SetIntakeAngle());
+
 		R2.whileHeld(new LiftIntake());
 		L2.whileHeld(new LowerIntake());
 		
@@ -101,15 +95,15 @@ public class OI {
 		
 		buttonPad.toggleWhenPressed(new SetIntakePosition());
 		
+		R1.whileHeld(new ShootCube());
 
-//		
-////		//CoPilot Controls
+//CoPilot Controls
 		coL3.whileHeld(new LowerElevatorClimb());
 		coR3.whileHeld(new RaiseElevatorClimb());
 		coL2.whileHeld(new LowerElevator());
 		coR2.whileHeld(new LiftElevator());
-		coR1.toggleWhenPressed(new ShootCube());
-		coL1.toggleWhenPressed(new ShootCubeSlow());
+		coR1.whileHeld(new ShootCube());
+		coL1.whileHeld(new ShootCubeSlow());
 		cobuttonX.whenPressed(new RunElevatorIntake());
 		cobuttonSquare.whenPressed(new RunElevatorSwitch());
 		cobuttonTriangle.whenPressed(new RunElevatorScale());
