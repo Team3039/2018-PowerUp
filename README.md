@@ -1,4 +1,4 @@
 # 2018-PowerUp
 
 Contributors
-tefloyd1215@att.net | joshlewi14@gmail.com
+tefloyd1215@gmail.com | joshlewi14@gmail.com
