@@ -9,7 +9,6 @@ public class RunElevatorScale extends CommandGroup {
 
     public RunElevatorScale() {
     	addSequential(new SetIntakeStraight(), .1);
-    	addSequential(new SetElevatorSlow(), .6);
         addSequential(new SetElevatorScale());
     }
 }

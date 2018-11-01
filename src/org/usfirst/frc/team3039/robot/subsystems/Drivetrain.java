@@ -33,8 +33,7 @@ public class Drivetrain extends Subsystem {
     public DifferentialDrive drivetrain = new DifferentialDrive(leftDrivetrain, rightDrivetrain);
     
     //Driving Encoder
-    public Encoder leftEnc = new Encoder(RobotMap.leftEncoderA, RobotMap.leftEncoderB, false);
-    public Encoder rightEnc = new Encoder(RobotMap.rightEncoderA, RobotMap.rightEncoderB, false);
+    public Encoder driveEncoder = new Encoder(RobotMap.driveEncoderA, RobotMap.driveEncoderB, false);
     
     //Gyro
     public AHRS navX = new AHRS(SPI.Port.kMXP);
@@ -49,10 +48,11 @@ public class Drivetrain extends Subsystem {
     //Drive Control 
     public void driveTeleOp(PS4Gamepad gp) {
     //Tele-Op Driving
-        drivetrain.arcadeDrive(gp.getLeftYAxis() * -1, gp.getRightXAxis() * .6);        
+        drivetrain.arcadeDrive(gp.getLeftYAxis() * -.92, gp.getRightXAxis() * .72);        
     }
     
     public void driveCurve(double power, double angle) {
+    	
         //Auto Turning    
         getAngle();
         drivetrain.curvatureDrive(power, angle, false);
@@ -65,7 +65,7 @@ public class Drivetrain extends Subsystem {
                 drivetrain.arcadeDrive(power, 0);
             }            
             else {
-                double p = 0.06;
+                double p = 0.057;
                 drivetrain.arcadeDrive(power, (0 - getAngle()) * p);
             }
     }
@@ -113,10 +113,10 @@ public class Drivetrain extends Subsystem {
     }
     
     public void curveLeft(){
-        frontrightMotor.set(-.7);
-        frontleftMotor.set(.0);
-        rearrightMotor.set(-.7);
-        rearleftMotor.set(.0);
+        frontrightMotor.set(-.5);
+        frontleftMotor.set(-.5);
+        rearrightMotor.set(-.5);
+        rearleftMotor.set(-.5);
         
     }
     
@@ -146,21 +146,19 @@ public class Drivetrain extends Subsystem {
         //360 Pulses per Revolution
         //6" Wheel has a Circumference of 18.85"
     	//18.5/360 = x/1
-        leftEnc.setDistancePerPulse(0.05235987755983);
-        rightEnc.setDistancePerPulse(0.05235987755983);
+        driveEncoder.setDistancePerPulse(0.05235987755983);
     }
     
     public double getDistance() {
-        return leftEnc.getDistance();
+        return driveEncoder.getDistance();
     }
     
     public double getRate() {
-    	return leftEnc.getRate();
+    	return driveEncoder.getRate();
     }
     
     public void resetEncoder() {
-    	leftEnc.reset();
-    	rightEnc.reset();
+        driveEncoder.reset();
     }
     
     //NavX

@@ -29,14 +29,12 @@ public class RobotMap {
 	
 //DIO	
 	//Encoder
-	public static int leftEncoderA = 0;
-	public static int leftEncoderB = 1;
+	public static int driveEncoderA = 0;
+	public static int driveEncoderB = 1;
 	public static int elevatorEncoderA = 2;
 	public static int elevatorEncoderB = 3;
 	public static int intakeEncoderA = 7;
 	public static int intakeEncoderB = 8;
-	public static int rightEncoderA = 12;
-	public static int rightEncoderB = 13;
 	//Limit Switches
 	public static int maxLevel = 4;
 	public static int midLevel = 5;
@@ -44,10 +42,11 @@ public class RobotMap {
 	public static int cubeSwitch = 9;
 	//Light Output
 	public static int cubeLight = 10;
-	public static int ratchetLight = 11;
+	public static int allianceLight = 11;
 //Solenoids
 	//EvoShifter
-	public static int evoshiftCylinder = 0;
-	public static int ratchetCylinder = 1;
+	public static int liftoffA = 1;
+	public static int liftoffB = 2;
+	public static int release = 3;
 	//public static int elevatorBrake = 2;
 }

@@ -10,7 +10,7 @@ public class AutoForward extends CommandGroup {
     public AutoForward() {
     	//addSequential(new AutoIntakePID(), .2);
     	addSequential(new Startup(), .1);
-    	addSequential(new AutoDrivePID(168));
+    	addSequential(new DrivePID(132));
 
 
     	

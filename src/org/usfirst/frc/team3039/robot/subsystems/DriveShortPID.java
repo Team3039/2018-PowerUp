@@ -8,9 +8,9 @@ import edu.wpi.first.wpilibj.command.PIDSubsystem;
 public class DriveShortPID extends PIDSubsystem {
 	public double targetDistance;
 	
-	public static double kP = .022; //.0045
-	public static double kI = .00005; //.0001
-	public static double kD = .045;
+	public static double kP = .029; //.0045
+	public static double kI = .0001; //.0001
+	public static double kD = .06;
 	
 	
 /*    public void setPIDValues(double target) {
@@ -55,9 +55,9 @@ public class DriveShortPID extends PIDSubsystem {
     public DriveShortPID() {
         super("Distance PID", kP, kI, kD); 
         setInputRange(-1000, 1000);
-        setOutputRange(-.9, .9);//voltage
+        setOutputRange(-.99, .99);//voltage
         getPIDController().setContinuous(false);
-        setPercentTolerance(.023);
+        setPercentTolerance(.027);
         
       }
 

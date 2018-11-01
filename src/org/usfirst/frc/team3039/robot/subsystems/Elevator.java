@@ -39,7 +39,6 @@ public class Elevator extends Subsystem {
 	public DigitalInput midLimit = new DigitalInput(RobotMap.midLevel);
 	public DigitalInput minLimit = new DigitalInput(RobotMap.minLevel);
 	
-	public Solenoid evoshiftCylinder = new Solenoid(RobotMap.evoshiftCylinder);
 	
 	//public Solenoid elevatorBrake = new Solenoid(RobotMap.elevatorBrake);
 	
@@ -54,8 +53,8 @@ public class Elevator extends Subsystem {
 			Robot.elevator.stopElevator();
 		}
 		else {
-			elevatorMotorA.set(.97);
-			elevatorMotorB.set(.97);
+			elevatorMotorA.set(.85);
+			elevatorMotorB.set(85);
 		}
 
 	}
@@ -65,13 +64,25 @@ public class Elevator extends Subsystem {
 			Robot.elevator.stopElevator();
 		}
 		else {
-			elevatorMotorA.set(.915);
-			elevatorMotorB.set(.915);
+			elevatorMotorA.set(.9);
+			elevatorMotorB.set(.9);
 		}
 
 	}
 	
-	public void liftElevatorRamp() {
+	public void liftElevatorRampMid() {
+		if (Robot.elevator.getMax() == false) {
+			Robot.elevator.stopElevator();
+		}
+		else {
+			elevatorMotorA.set(.8);
+			elevatorMotorB.set(.8);
+		}
+
+	}
+	
+	
+	public void liftElevatorRampSlow() {
 		if (Robot.elevator.getMax() == false) {
 			Robot.elevator.stopElevator();
 		}
@@ -83,8 +94,8 @@ public class Elevator extends Subsystem {
 	}
 	
 	public void climbSpeed() {
-		elevatorMotorA.set(-.6);
-		elevatorMotorB.set(-.6);	
+		elevatorMotorA.set(-.98);
+		elevatorMotorB.set(-.98);	
 	}
 	
 	public void lowerElevator() {
@@ -92,8 +103,8 @@ public class Elevator extends Subsystem {
 			Robot.elevator.stopElevator();
 		}
 		else {
-			elevatorMotorA.set(-.9);
-			elevatorMotorB.set(-.9);
+			elevatorMotorA.set(-.96);
+			elevatorMotorB.set(-.96);
 		}
 
 	}
@@ -103,8 +114,8 @@ public class Elevator extends Subsystem {
 			Robot.elevator.stopElevator();
 		}
 		else {
-			elevatorMotorA.set(-.93);
-			elevatorMotorB.set(-.93);
+			elevatorMotorA.set(-.96);
+			elevatorMotorB.set(-.96);
 		}
 
 	}
@@ -114,7 +125,7 @@ public class Elevator extends Subsystem {
 		elevatorMotorB.set(0);
 	}
 	
-	//Braking
+	//Braking0
 	public void unBrake() {
 		elevatorMotorA.setNeutralMode(NeutralMode.Coast);
 		elevatorMotorB.setNeutralMode(NeutralMode.Coast);
@@ -153,14 +164,6 @@ public class Elevator extends Subsystem {
 		return midLimit.get();
 	}
 	
-	public void torqueMode() {
-		evoshiftCylinder.set(false);
-	}
-	
-	public void speedMode() {
-		evoshiftCylinder.set(true);
-		
-	}
 	
 	/*public void brakeElevator() {
 		elevatorBrake.set(true);

@@ -1,13 +1,12 @@
 
 package org.usfirst.frc.team3039.robot;
 
-import org.usfirst.frc.team3039.robot.commands.AutoCenter;
+
 import org.usfirst.frc.team3039.robot.commands.AutoForward;
-import org.usfirst.frc.team3039.robot.commands.AutoLeft;
 import org.usfirst.frc.team3039.robot.commands.AutoLeftScale;
-import org.usfirst.frc.team3039.robot.commands.AutoRight;
+import org.usfirst.frc.team3039.robot.commands.AutoLeftSwitch;
 import org.usfirst.frc.team3039.robot.commands.AutoRightScale;
-import org.usfirst.frc.team3039.robot.commands.AutoScaleInZone;
+import org.usfirst.frc.team3039.robot.commands.AutoRightSwitch;
 import org.usfirst.frc.team3039.robot.commands.AutoTest;
 import org.usfirst.frc.team3039.robot.subsystems.Climber;
 import org.usfirst.frc.team3039.robot.subsystems.DrivePID;
@@ -54,21 +53,24 @@ public class Robot extends IterativeRobot {
 	public static final TurnPID turnpid = new TurnPID();
 	public static final DriveShortPID movepid = new DriveShortPID();
 	public static final PIDSubsystem pidcontroller = new PIDSubsystem();
-
 	
 	//Auto Setup
-	Command autonomousCommand;
+	Command autoCommand;
     SendableChooser<CommandGroup> chooser;
-		
+	
 	//Robot Status
 	public static boolean rachetMode; //False = Red, True = Green
 	public static boolean intakeStraight;
 	public static boolean intakeAngle;
 	public static boolean intakeUp;
+	public static boolean alliance;
+	
+	//Cube Status
 	public static double shootCube; //Speed we Shoot the Cube At
 	public static double area;
 	
-	static String gameInfo = "   " ;
+	//Field Status
+	public static String gameData = "" ;
 	
 	//Vision Array Setup
 	public static NetworkTable cubeTable = NetworkTableInstance.getDefault().getTable("GRIP/cubeReport"); //Pulling the Table From GRIP
@@ -79,42 +81,39 @@ public class Robot extends IterativeRobot {
 	public static double[] cubeArrayX; //Making centerX a Double Array
 	public static double[] cubeArrayY; //Making centerY a Double Array
 	public static double[] cubeArrayArea; //Making Area a Double Array
-	
-	
-	
-	//Utilizing Vision Array
-	/*This is where we make everything necessary to use the vision system that we set up. 
-	 * Later in the program we use these variable to control different parts of the Robot Vision to it's best ability
-	 * cubeDistance determines the Distance from the Robot to the Cube which we made a double because that's how the Number Returns
-	 * */
-	
 	public static double  cubeDistance; //How Far Away the Cube is
-		
+	
+
+	
 	@Override
 	public void robotInit() {
-		setData("");
+	
+		//Robot Setup
+		oi = new OI();
 		drivetrain.motorSafety(false);
 		elevator.motorSafety(false);
 		intake.motorSafety(false);		
 		drivetrain.brake();
-		elevator.torqueMode();
-		oi = new OI();
-		chooser = new SendableChooser<CommandGroup>();
+		drivetrain.resetEncoder();
+		drivetrain.setEncoder();
+		drivetrain.resetNavX();
+		drivetrain.setEncoder();
+		elevator.resetElevatorEncoder();
+		elevator.setUp();
+		intake.resetIntakeEncoder();
+		intake.intakeUp();
 		
-
 		//Auto Chooser
-		SmartDashboard.putData("Autonomous", chooser);
-		chooser.addObject("Left", new AutoLeft());
-		chooser.addObject("Left-Scale", new AutoLeftScale());
-		chooser.addObject("Center", new AutoCenter());
-		chooser.addObject("Right", new AutoRight());
-		chooser.addObject("Right-Scale", new AutoRightScale());
+		chooser = new SendableChooser<CommandGroup>();		
 		chooser.addDefault("Forward", new AutoForward());
-		
-//		chooser.addObject("Test", new AutoTest());
-		chooser.addObject("CAPITAL DE FREEZE", new AutoScaleInZone());
+		chooser.addObject("RIGHT Scale", new AutoRightScale());
+		chooser.addObject("RIGHT Switch", new AutoRightSwitch());
+		chooser.addObject("LEFT Scale", new AutoLeftScale());
+		chooser.addObject("LEFT Switch", new AutoLeftSwitch());
+		chooser.addObject("TEST", new AutoTest());
+		SmartDashboard.putData("Auto Selector", chooser);
 
-		//Camera
+		//Camera Setup
 		//http://roborio-3039-frc.local:1181/?action=stream
 		//Here we set up the camera that the robot will use to maneuver 
 		UsbCamera usbCamera = CameraServer.getInstance().startAutomaticCapture();
@@ -124,61 +123,39 @@ public class Robot extends IterativeRobot {
 		usbCamera.setWhiteBalanceAuto();
 		logitechCam.setWhiteBalanceAuto();
 
-
-
-		//Robot Startup
-		Robot.drivetrain.resetEncoder();
-		Robot.drivetrain.setEncoder();
-		Robot.drivetrain.resetNavX();
-		Robot.climber.disengageRatchet();
-		Robot.elevator.torqueMode();
-		Robot.elevator.resetElevatorEncoder();
-		Robot.elevator.setUp();
-		Robot.intake.resetIntakeEncoder();
-		intake.intakeUp();
-
 	}
 	
 	@Override
 	public void robotPeriodic() {
 		setData(DriverStation.getInstance().getGameSpecificMessage());
-		
-//		System.out.println("Intake Encoder Rotation: " + Robot.intake.getIntakeEncoder());
-		//System.out.println("Elevator Min" + Robot.elevator.getMin());
-		//System.out.println("Elevator Max" + Robot.elevator.getMax());
-		//System.out.println("Elevator Mid" + Robot.elevator.getMid());
-		//System.out.println("Robot Angle" + Robot.drivetrain.getAngle());
-		//System.out.println("Encoder Distance" + Robot.drivetrain.getDistance());
-		
+        autoCommand = (Command) chooser.getSelected();
 
-       // System.out.println("Intake Angle" + Robot.intake.getIntakeEncoder());
-
-        
-
-
-//		//Checks if Area Targets Exist
-//    	double[] cubeArrayArea = cubeEntryArea.getDoubleArray(defaultValue);
-//    	if(cubeArrayArea.length < 1) {
-//    		area = 0;
-//    	}
-//    	else if(cubeArrayArea.length == 1) {
-//    		area = cubeArrayArea[0];
-//    	}
-//    	else {
-//    		area = (cubeArrayArea[0] + cubeArrayArea[1])/2;
-//    	}
+		//Checks if Area Targets Exist
+    	double[] cubeArrayArea = cubeEntryArea.getDoubleArray(defaultValue);
+    	if(cubeArrayArea.length < 1) {
+    		area = 0;
+    	}
+    	else if(cubeArrayArea.length == 1) {
+    		area = cubeArrayArea[0];
+    	}
+    	else {
+    		area = (cubeArrayArea[0] + cubeArrayArea[1])/2;
+    	}
     	
+    	alliance = SmartDashboard.getBoolean("Alliance", false);
+
 	}
 	
-		
-	  
-
+	
+	
 	@Override
 	public void disabledInit() {
+//		Robot.intake.resetIntakeEncoder(); //Messes up when Auto Switches to TeleOp
 		Robot.elevator.resetElevatorEncoder();
 		Robot.drivetrain.resetNavX();
 		Robot.drivetrain.resetEncoder();
-		
+		Robot.lights.swapAlliance(alliance);
+
 	}
 
 	@Override
@@ -191,86 +168,81 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void autonomousInit() {
-		setData(DriverStation.getInstance().getGameSpecificMessage());
-//		
-//		if(gameInfo.charAt(0) == 'L') {
-//			if
-//			autonomousCommand = new AutoBlueLeft();
-//
-//		}
-//		SmartDashboard.putBoolean("Test Bool", true);
-		chooser.addObject("Left", new AutoLeft());
-		chooser.addObject("Left-Scale", new AutoLeftScale());
-		chooser.addObject("Center", new AutoCenter());
-		chooser.addObject("Right", new AutoRight());
-		chooser.addObject("Right-Scale", new AutoRightScale());
+		//Auto Chooser
+		chooser = new SendableChooser<CommandGroup>();		
 		chooser.addDefault("Forward", new AutoForward());
-//		
-//		chooser.addObject("Test", new AutoTest());
+		chooser.addObject("RIGHT Scale", new AutoRightScale());
+		chooser.addObject("RIGHT Switch", new AutoRightSwitch());
+		chooser.addObject("LEFT Scale", new AutoLeftScale());
+		chooser.addObject("LEFT Switch", new AutoLeftSwitch());
+		chooser.addObject("TEST", new AutoTest());
+		SmartDashboard.putData("Auto Selector", chooser);
+        autoCommand = (Command) chooser.getSelected();
 
-		chooser.addObject("CAPITAL DE FREEZE", new AutoScaleInZone());
-
-
-
-		autonomousCommand = chooser.getSelected();
+		gameData = DriverStation.getInstance().getGameSpecificMessage();
 		
-		if (autonomousCommand != null)
-			autonomousCommand.start();
+		if(gameData != null) {
+			gameData = DriverStation.getInstance().getGameSpecificMessage().substring(0, 2); 
+		}
+		else {
+			  System.out.println("No Game Data");
+			  gameData = "";
+		}
 		
-		intake.cubeIn();
-	}
+
+	
+	autoCommand.start();
+	SmartDashboard.putString("Chosen Auto", autoCommand.toString());	
+	
+	intake.cubeIn();
+	}	
 
 
 	@Override
-	public void autonomousPeriodic() {	
+	public void autonomousPeriodic() {
+		//Auto Chooser
+		chooser = new SendableChooser<CommandGroup>();		
+		chooser.addDefault("Forward", new AutoForward());
+		chooser.addObject("RIGHT Scale", new AutoRightScale());
+		chooser.addObject("RIGHT Switch", new AutoRightSwitch());
+		chooser.addObject("LEFT Scale", new AutoLeftScale());
+		chooser.addObject("LEFT Switch", new AutoLeftSwitch());
+		chooser.addObject("TEST", new AutoTest());
+		SmartDashboard.putData("Auto Selector", chooser);
+        autoCommand = (Command) chooser.getSelected();
 		Scheduler.getInstance().run();
 		setData(DriverStation.getInstance().getGameSpecificMessage());
 
-
-		autonomousCommand = chooser.getSelected();
-		chooser.addObject("Left", new AutoLeft());
-		chooser.addObject("Left-Scale", new AutoLeftScale());
-		chooser.addObject("Center", new AutoCenter());
-		chooser.addObject("Right", new AutoRight());
-		chooser.addObject("Right-Scale", new AutoRightScale());
-		chooser.addObject("Forward", new AutoForward());
-//				
-//		chooser.addObject("Test", new AutoTest());
-		chooser.addObject("CAPITAL DE FREEZE", new AutoScaleInZone());
 
 	}
 
 	@Override
 	public void teleopInit() {
-		if (autonomousCommand != null)
-			autonomousCommand.cancel();
+		if (autoCommand != null)
+			autoCommand.cancel();
 		Robot.drivetrain.resetEncoder();
 		Robot.drivetrain.setEncoder();
 		Robot.drivetrain.resetNavX();
-		//System.out.println("Robot Switch" + Robot.intake.getSwitch());
+		Robot.intakepid.disable();
+		Robot.lights.swapAlliance(alliance);
 
 	}
 
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-		SmartDashboard.getNumber("Intake Rotation", Robot.intake.getIntakeEncoder());
-		//System.out.println("Elevator Encoder:" + Robot.elevator.getElevatorEncoder());
-    	Robot.lights.checkLights();
-
-
-
-//      System.out.println("Switch State" + Robot.intake.getSwitch());
-		
+		System.out.println("Intake Encoder:" + Robot.intake.getIntakeEncoder());
+//		System.out.println("Robot Angle: " + Robot.drivetrain.getAngle());
+//		System.out.println("Robot Distance: " + Robot.drivetrain.getDistance());
 
 		double cubeDistance = 57.7495 * Math.pow(Math.E, (-0.0000168466 * area));
 		Robot.cubeDistance = cubeDistance;
 //		System.out.println("Distance to Cube : " + cubeDistance);
+
 //		double cubeDistanceA = 59 * Math.pow(Math.E, (-0.0000168466 * area));
 //		System.out.println("Distance to Cube A : " + cubeDistanceA);
-//		System.out.println("Distance to Cube B :" + cubeDistance);
-//		System.out.println("ANGLE : " + Robot.drivetrain.getAngle());
-//		System.out.println("DISTANCE : " + Robot.drivetrain.getDistance());
+
+		System.out.println("Robot Angle" + Robot.drivetrain.getAngle());
 	}
 
 
@@ -281,11 +253,11 @@ public class Robot extends IterativeRobot {
 	}
 	
 	public static String getData() {
-		return gameInfo;
+		return gameData;
 	}
 	
 	public void setData(String newString) {
-		gameInfo = newString;
+		gameData = newString;
 	}
 	    
 	    }

@@ -24,14 +24,8 @@ public class SetElevatorPile extends Command {
     protected void execute() {
     	if(Robot.intake.intakeUp == false) {
         	Robot.elevatorpid.setElevatorPosition(550);
-//        	if(Robot.elevator.risen) {
-//        		//Robot.elevator.lowerElevator();
-//        		System.out.print("Going Switch");
-//        	}
-//        	else {
-//        		//Robot.elevator.liftElevator();
-//        	}
     	}
+
     	else {
     		Robot.elevator.stopElevator();
     	}
@@ -46,11 +40,13 @@ public class SetElevatorPile extends Command {
     // Called once after isFinished returns true
     protected void end() {
     	Robot.elevator.stopElevator();
+    	Robot.elevatorpid.disablePID();
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
     	Robot.elevator.stopElevator();
+    	Robot.elevatorpid.disablePID();
     }
 }

@@ -20,10 +20,9 @@ public class SetElevatorSlow extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Robot.elevator.torqueMode();
     	if(Robot.intake.intakeUp == false) {
         	//Robot.elevatorpid.scaleLevel();
-        	Robot.elevator.liftElevatorRamp();
+        	Robot.elevator.liftElevatorRampSlow();
         	Robot.intake.cubeOut();
 
     	}

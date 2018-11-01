@@ -23,15 +23,12 @@ public class SetIntakeDown extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-//    	Robot.intake.lowerIntake();
     	Robot.intake.cubeIn = false;
     	Robot.intake.climb = true;
-    	Robot.intakepid.intakeDown();
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-//        return (Robot.intake.getIntakeEncoder() >= (targetRev - 10));
     	return Robot.intakepid.onTarget();
     }
 

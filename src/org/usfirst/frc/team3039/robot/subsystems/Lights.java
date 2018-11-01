@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class Lights extends Subsystem {
 
     public DigitalOutput cubeLight = new DigitalOutput(RobotMap.cubeLight);
-    public DigitalOutput ratchetLight = new DigitalOutput(RobotMap.ratchetLight);
+    public DigitalOutput allianceLight = new DigitalOutput(RobotMap.allianceLight);
 
     public void cubeIn() {
     	cubeLight.set(true);
@@ -21,18 +21,10 @@ public class Lights extends Subsystem {
     	cubeLight.set(false);
     }
     
-    public void ratchetEngaged() {
-    	ratchetLight.set(true);
+    public void swapAlliance(boolean alliance) {
+    	allianceLight.set(alliance);
     }
-    
-    public void ratchetDisengaged() {
-    	ratchetLight.set(false);
-    }
-    
-    public void checkLights() {
-    	//System.out.println("CUBE" + cubeLight.get());
-    	//System.out.println("RATCHET" + ratchetLight.get());
-    }
+
     public void initDefaultCommand() {
         // Set the default command for a subsystem here.
         //setDefaultCommand(new MySpecialCommand());

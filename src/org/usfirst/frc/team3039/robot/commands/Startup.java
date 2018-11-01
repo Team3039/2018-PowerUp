@@ -19,12 +19,10 @@ public class Startup extends Command {
     	Robot.drivetrain.resetEncoder();
     	Robot.drivetrain.setEncoder();
     	Robot.drivetrain.resetNavX();
-    	Robot.elevator.setElevatorEncoder();
     	Robot.elevator.resetElevatorEncoder();
+    	Robot.elevator.setElevatorEncoder();
     	Robot.drivetrain.brake();
     	Robot.elevator.brake();
-    	Robot.elevator.torqueMode();
-    	Robot.climber.disengageRatchet();
 		Robot.drivetrain.motorSafety(false);
 		Robot.elevator.motorSafety(false);
 		Robot.intake.motorSafety(false);

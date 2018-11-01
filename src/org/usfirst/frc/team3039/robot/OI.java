@@ -1,22 +1,22 @@
 
 
+
 package org.usfirst.frc.team3039.robot;
 
-import org.usfirst.frc.team3039.robot.commands.EngageRatchet;
+import org.usfirst.frc.team3039.robot.commands.DropForks;
 import org.usfirst.frc.team3039.robot.commands.GetCube;
 import org.usfirst.frc.team3039.robot.commands.LiftElevator;
 import org.usfirst.frc.team3039.robot.commands.LiftIntake;
+import org.usfirst.frc.team3039.robot.commands.Liftoff;
 import org.usfirst.frc.team3039.robot.commands.LowerElevator;
 import org.usfirst.frc.team3039.robot.commands.LowerElevatorClimb;
 import org.usfirst.frc.team3039.robot.commands.LowerIntake;
 import org.usfirst.frc.team3039.robot.commands.RaiseElevatorClimb;
+import org.usfirst.frc.team3039.robot.commands.ResetIntakeEncoder;
 import org.usfirst.frc.team3039.robot.commands.RunElevatorIntake;
-import org.usfirst.frc.team3039.robot.commands.RunElevatorScale;
-import org.usfirst.frc.team3039.robot.commands.RunElevatorSwitch;
 import org.usfirst.frc.team3039.robot.commands.RunPreClimb;
 import org.usfirst.frc.team3039.robot.commands.SetIntakeAngle;
 import org.usfirst.frc.team3039.robot.commands.SetIntakePosition;
-import org.usfirst.frc.team3039.robot.commands.SetIntakeTurn;
 import org.usfirst.frc.team3039.robot.commands.SetIntakeUp;
 import org.usfirst.frc.team3039.robot.commands.ShootCube;
 import org.usfirst.frc.team3039.robot.commands.ShootCubeSlow;
@@ -80,21 +80,24 @@ public class OI {
 	
 	public OI() {
 		
-		//Pilot Controls
+//Pilot Controls
 		
 		buttonSquare.toggleWhenPressed(new GetCube());
-		buttonTriangle.toggleWhenPressed(new SetIntakeTurn());
 		buttonX.toggleWhenPressed(new SetIntakeUp());
-		buttonCircle.toggleWhenPressed(new SetIntakeAngle());
+		buttonTriangle.toggleWhenPressed(new SetIntakeAngle());
+
+		L2.whileHeld(new LiftIntake());
+		R2.whileHeld(new LowerIntake());
 		
-		R2.whileHeld(new LiftIntake());
-		L2.whileHeld(new LowerIntake());
+		R1.toggleWhenPressed(new ShootCube());
+		L1.toggleWhenPressed(new ShootCubeSlow());
 		
 		buttonPad.toggleWhenPressed(new SetIntakePosition());
+		buttonOptions.whileHeld(new ResetIntakeEncoder());
 		
+		R1.whileHeld(new ShootCube());
 
-		
-		//CoPilot Controls
+//CoPilot Controls
 		coL3.whileHeld(new LowerElevatorClimb());
 		coR3.whileHeld(new RaiseElevatorClimb());
 		coL2.whileHeld(new LowerElevator());
@@ -102,10 +105,9 @@ public class OI {
 		coR1.whileHeld(new ShootCube());
 		coL1.whileHeld(new ShootCubeSlow());
 		cobuttonX.whenPressed(new RunElevatorIntake());
-		cobuttonSquare.whenPressed(new RunElevatorSwitch());
-		cobuttonTriangle.whenPressed(new RunElevatorScale());
+		cobuttonSquare.toggleWhenPressed(new DropForks());
+		cobuttonTriangle.whileHeld(new Liftoff());
 		cobuttonCircle.whenPressed(new RunPreClimb());
-		cobuttonShare.toggleWhenPressed(new EngageRatchet());
 		cobuttonOptions.whenPressed(new StopElevator());
 	}
 }

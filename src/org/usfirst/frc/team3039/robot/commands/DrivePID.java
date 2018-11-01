@@ -7,39 +7,45 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class AutoSetIntakePosition extends Command {
-    double targetAngle;
-
-    public AutoSetIntakePosition(double targetAngle) {
-    	requires(Robot.intake);
-    	this.targetAngle = targetAngle;
+public class DrivePID extends Command {
+	public double distance;
+    public DrivePID(double distance) {
+    	requires(Robot.drivetrain);
+    	this.distance = distance;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.intake.motorSafety(false);
-    	Robot.intake.setIntakeEncoder();
+    	Robot.drivetrain.setEncoder();
+    	Robot.drivetrain.resetEncoder();
+    	Robot.drivetrain.resetNavX();
+    	Robot.drivetrain.motorSafety(false);
+    	Robot.drivetrain.unBrake();
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Robot.intake.getIntakeEncoder();
-    	Robot.intakepid.setIntakePosition(targetAngle);
+    	Robot.drivetrain.getAngle();
+    	Robot.drivepid.drive(distance);
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return (Robot.intakepid.onTarget());
+        return (Robot.drivepid.onTarget());
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	Robot.intake.stopIntake();
+    	Robot.drivepid.disablePID();
+    	Robot.drivetrain.resetEncoder();
+    	Robot.drivetrain.brake();
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-    	Robot.intake.stopIntake();
+    	Robot.drivetrain.resetEncoder();
+    	Robot.drivepid.disablePID();
+    	Robot.drivetrain.brake();
     }
 }

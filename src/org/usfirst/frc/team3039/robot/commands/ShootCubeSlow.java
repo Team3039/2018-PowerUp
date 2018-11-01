@@ -32,8 +32,13 @@ public class ShootCubeSlow extends Command {
     protected void end() {
     	Robot.intake.stopCube();
     	Robot.intake.stopIntakeNoBrake();
-    	Robot.intake.cubeIntakeAngle();
+    	Robot.intake.cubeVaultFalse();
+    	Robot.intake.cubeAngleFalse();
+    	Robot.intake.cubeTurnFalse();
+    	Robot.intake.cubeScored();
     	Robot.lights.cubeOut();
+    	Robot.intake.cubeAuto = false;
+
     }
 
     // Called when another command which requires one or more of the same
@@ -41,7 +46,11 @@ public class ShootCubeSlow extends Command {
     protected void interrupted() {
     	Robot.intake.stopCube();
     	Robot.intake.stopIntakeNoBrake();
-    	Robot.intake.cubeIntakeAngle();
+    	Robot.intake.cubeVaultFalse();
+    	Robot.intake.cubeAngleFalse();
+    	Robot.intake.cubeTurnFalse();
+    	Robot.intake.cubeScored();
     	Robot.lights.cubeOut();
+    	Robot.intake.cubeAuto = false;
     }
 }

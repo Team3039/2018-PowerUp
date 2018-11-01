@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class RunElevatorSwitchAuto extends CommandGroup {
 
     public RunElevatorSwitchAuto() {
-		addParallel(new SetAutoIntakePID());
+		addParallel(new AutoIntakePID(), .1);
     	addSequential(new SetElevatorSwitchAuto());
     }
 }

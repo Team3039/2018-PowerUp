@@ -37,6 +37,7 @@ public class ShootCube extends Command {
     	Robot.intake.cubeTurnFalse();
     	Robot.intake.cubeScored();
     	Robot.lights.cubeOut();
+    	Robot.intake.cubeAuto = false;
     }
 
     // Called when another command which requires one or more of the same
@@ -49,5 +50,7 @@ public class ShootCube extends Command {
     	Robot.intake.cubeTurnFalse();
     	Robot.intake.cubeScored();
     	Robot.lights.cubeOut();
+    	Robot.intake.cubeAuto = false;
+
     }
 }

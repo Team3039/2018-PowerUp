@@ -102,18 +102,19 @@ public class SetIntakePosition extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
+  
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	if(Robot.intake.cubeIn == true && (Robot.intake.cubeAngle == false) && (Robot.intake.cubeVault == false) && (Robot.intake.cubeScored == false) && (Robot.intake.cubeTurn == false) && (Robot.intake.cubePush == false)){
-    		Robot.intakepid.setIntakePosition(300);
+    		Robot.intakepid.setIntakePosition(270);
     		//System.out.println("Cube In Straight");
     		Robot.intake.intakeDown();
     	}
     	
     	else if (Robot.intake.cubeIn == false && (Robot.intake.cubeAngle == false) && (Robot.intake.cubeVault == false) && (Robot.intake.cubeScored == false) && (Robot.intake.cubeTurn == false) && (Robot.intake.cubePush == false)){
-    		Robot.intakepid.setIntakePosition(285);
+    		Robot.intakepid.setIntakePosition(325);
     		//System.out.println("No Cube Straight");
     		Robot.intake.intakeDown();
     	}
@@ -126,7 +127,7 @@ public class SetIntakePosition extends Command {
     	}
     	
     	else if (Robot.intake.cubeIn == true && (Robot.intake.cubeAngle == true)){
-    		Robot.intakepid.setIntakePosition(140);
+    		Robot.intakepid.setIntakePosition(120);
     		//System.out.println("Angled Shot");
     		Robot.intake.intakeDown();
     	}
@@ -143,11 +144,11 @@ public class SetIntakePosition extends Command {
     		Robot.intake.intakeDown();
     	}
     	
-//    	else if(Robot.intake.cubeIn  == false && (Robot.intake.climb == true)) {
-//    		Robot.intakepid.setIntakePosition(600);
-//    		//System.out.println("Slight Angle");
-//    		Robot.intake.intakeDown();
-//    	}
+    	else if(Robot.intake.cubeIn  == false && (Robot.intake.climb == true)) {
+    		Robot.intakepid.setIntakePosition(585);
+    		//System.out.println("Slight Angle");
+    		Robot.intake.intakeDown();
+    	}
     	else{
     		Robot.intakepid.setIntakePosition(300);
     		//System.out.println("Neither");

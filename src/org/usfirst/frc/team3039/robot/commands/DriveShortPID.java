@@ -7,9 +7,9 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class AutoDrivePID extends Command {
+public class DriveShortPID extends Command {
 	public double distance;
-    public AutoDrivePID(double distance) {
+    public DriveShortPID(double distance) {
     	requires(Robot.drivetrain);
     	this.distance = distance;
     }
@@ -28,17 +28,17 @@ public class AutoDrivePID extends Command {
     	Robot.drivetrain.getAngle();
 //    	System.out.println("Encoder : " + Robot.drivetrain.getDistance());
     	//System.out.println("Gyro : " + Robot.drivetrain.getAngle());
-    	Robot.drivepid.drive(distance);
+    	Robot.movepid.drive(distance);
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return (Robot.drivepid.onTarget());
+        return (Robot.movepid.onTarget());
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	Robot.drivepid.disablePID();
+    	Robot.movepid.disablePID();
     	Robot.drivetrain.resetEncoder();
     	Robot.drivetrain.brake();
     }
@@ -47,7 +47,7 @@ public class AutoDrivePID extends Command {
     // subsystems is scheduled to run
     protected void interrupted() {
     	Robot.drivetrain.resetEncoder();
-    	Robot.drivepid.disablePID();
+    	Robot.movepid.disablePID();
     	Robot.drivetrain.brake();
     }
 }

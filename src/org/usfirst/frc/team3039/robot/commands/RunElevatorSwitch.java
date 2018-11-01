@@ -9,7 +9,6 @@ public class RunElevatorSwitch extends CommandGroup {
 
     public RunElevatorSwitch() {
     	addSequential(new SetIntakeStraight(), .1);
-    	addSequential(new SetElevatorSlow(), .35);
         addSequential(new SetElevatorSwitch());
     }
 }

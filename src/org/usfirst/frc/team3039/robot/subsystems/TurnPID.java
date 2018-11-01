@@ -8,14 +8,14 @@ public class TurnPID extends PIDSubsystem {
 	
 	public static double kP = .0058;
 	public static double kI = .0002;
-	public static double kD = .099;
+	public static double kD = .1;
 
 
     // Initialize your subsystem here
     public TurnPID() {
         super("Rotation PID", kP, kI, kD); 
         setInputRange(-360, 360);
-        setOutputRange(-.6, .6);//voltage
+        setOutputRange(-.65, .65);//voltage
         getPIDController().setContinuous(false);
         setPercentTolerance(.2);
     }

@@ -22,7 +22,6 @@ public class SetElevatorScale extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Robot.elevator.torqueMode();
     	Robot.elevator.movingScale = true;
     	if(Robot.intake.intakeUp == false) {
         	//Robot.elevatorpid.scaleLevel();

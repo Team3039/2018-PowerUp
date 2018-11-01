@@ -10,7 +10,6 @@ public class RunPreClimb extends CommandGroup {
     public RunPreClimb() {
         addSequential(new RunElevatorSwitch());    	
         addSequential(new SetIntakeDown());
-//        addSequential(new SetElevatorTorqueMode(), .1);
-//        addSequential(new DisableIntakePID());
+
     }
 }

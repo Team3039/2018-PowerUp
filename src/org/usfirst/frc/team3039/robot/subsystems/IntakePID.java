@@ -12,7 +12,7 @@ public class IntakePID extends PIDSubsystem {
 	private double targetAngleDown = 585;
 	
 	public static double kP = .0610;
-	public static double kI = .0;
+	public static double kI = 0.000001;
 	public static double kD = .001;
     
     public IntakePID() {

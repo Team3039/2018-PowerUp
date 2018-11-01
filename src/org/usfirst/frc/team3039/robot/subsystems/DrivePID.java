@@ -158,7 +158,7 @@ public class DrivePID extends PIDSubsystem {
     public DrivePID() {
         super("Distance PID", kP, kI, kD); 
         setInputRange(-1000, 1000);
-        setOutputRange(-.99, .99);//voltage
+        setOutputRange(-.99, .90);//voltage
         getPIDController().setContinuous(false);
         setPercentTolerance(.023);
         

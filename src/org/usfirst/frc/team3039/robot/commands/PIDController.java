@@ -25,9 +25,9 @@ protected void initialize() {
 }
 
 protected void execute() {
-	Robot.drivetrain.getAngle();
-	Robot.pidcontroller.PID(distance);
-	Robot.drivetrain.driveStraight(output);
+//	Robot.drivetrain.getAngle();
+//	Robot.pidcontroller.PID(distance);
+//	Robot.drivetrain.driveStraight(output);
 	
 	System.out.println("Target: " + distance);
 	System.out.println("Output: " + output);

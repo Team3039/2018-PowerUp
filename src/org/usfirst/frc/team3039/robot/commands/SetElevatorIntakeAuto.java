@@ -22,7 +22,6 @@ public class SetElevatorIntakeAuto extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Robot.elevator.torqueMode();
     	if(Robot.intake.intakeUp == false) {
 //        	Robot.elevatorpid.intakeLevel();
         	Robot.elevator.lowerElevatorAuto();
