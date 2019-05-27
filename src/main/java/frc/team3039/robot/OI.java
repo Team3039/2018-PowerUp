@@ -28,6 +28,15 @@ public class OI {
 		return cp;
 	}
 	
+
+	private static OI instance;
+
+	public static OI getInstance() {
+		if (instance == null) {
+			instance = new OI();
+		}
+		return instance;
+	}
 	//Creates a Button Object from the Controllers
 	//Pilot
 	Button buttonTriangle = gp.getButtonTriangle();

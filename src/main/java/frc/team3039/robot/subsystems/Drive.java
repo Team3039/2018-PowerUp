@@ -9,8 +9,6 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.sensors.PigeonIMU;
-import com.ctre.phoenix.sensors.PigeonIMU.CalibrationMode;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.networktables.NetworkTable;
@@ -22,10 +20,12 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team3039.robot.Constants;
+import frc.team3039.robot.OI;
 import frc.team3039.robot.Robot;
 import frc.team3039.robot.RobotMap;
 import frc.team3039.robot.loops.Loop;
 import frc.team3039.robot.planners.DriveMotionPlanner;
+import frc.team3039.utility.BHRDifferentialDrive;
 import frc.team3039.utility.DriveSignal;
 import frc.team3039.utility.ReflectingCSVWriter;
 import frc.team3039.utility.Util;
@@ -85,21 +85,54 @@ public class Drive extends Subsystem implements Loop {
 	private TalonSRXEncoder rightDrive1;
 	private TalonSRX rightDrive2;
 
+
+	private BHRDifferentialDrive m_drive;
+
+	private boolean isRed = true;
+	private boolean mIsBrakeMode = false;
+
 	private long periodMs = (long) (Constants.kLooperDt * 1000.0);
 
 	protected Rotation2d mAngleAdjustment = Rotation2d.identity();
+
+	public static final double STEER_NON_LINEARITY = 0.5;
+	public static final double MOVE_NON_LINEARITY = 1.0;
+
+	public static final double STICK_DEADBAND = 0.02;
+
+	public static final double PITCH_THRESHOLD = 20;
+
+	private int pitchWindowSize = 5;
+	private int windowIndex = 0;
+	private double pitchSum = 0;
+	private double[] pitchAverageWindow = new double[pitchWindowSize];
+
+	private int m_moveNonLinear = 0;
+	private int m_steerNonLinear = -3;
+
+	private double m_moveScale = 1.0;
+	private double m_steerScale = 1.0;
+
+	private double m_moveInput = 0.0;
+	private double m_steerInput = 0.0;
+
+	private double m_moveOutput = 0.0;
+	private double m_steerOutput = 0.0;
+
+	private double m_moveTrim = 0.0;
+	private double m_steerTrim = 0.0;
+
 	private DriveControlMode driveControlMode = DriveControlMode.JOYSTICK;
 
 	public double targetDrivePositionTicks;
 	private boolean isFinished;
-	private boolean mIsBrakeMode = false;
 
 	private static final int kPositionControlSlot = 0;
 	private static final int kVelocityControlSlot = 1;
 
-	private PigeonIMU gyroPigeon;
-	private double[] yprPigeon = new double[3];
-	private short[] xyzPigeon = new short[3];
+	// private PigeonIMU gyroPigeon;
+	// private double[] yprPigeon = new double[3];
+	// private short[] xyzPigeon = new short[3];
 	private boolean isCalibrating = false;
 	private double gyroOffsetDeg = 0;
 
@@ -127,7 +160,7 @@ public class Drive extends Subsystem implements Loop {
 			DriveControlMode currentControlMode = getControlMode();
 
 			if (currentControlMode == DriveControlMode.JOYSTICK) {
-				// driveWithJoystick();
+				driveWithJoystick();
 			} else if (!isFinished()) {
 				readPeriodicInputs();
 				switch (currentControlMode) {
@@ -225,9 +258,9 @@ public class Drive extends Subsystem implements Loop {
 
 			mMotionPlanner = new DriveMotionPlanner();
 
-			gyroPigeon = new PigeonIMU(rightDrive2);
-			gyroPigeon.configFactoryDefault();
-			rightDrive2.setStatusFramePeriod(StatusFrameEnhanced.Status_11_UartGadgeteer, 10, 10);
+			// gyroPigeon = new PigeonIMU(rightDrive2);
+			// gyroPigeon.configFactoryDefault();
+			// rightDrive2.setStatusFramePeriod(StatusFrameEnhanced.Status_11_UartGadgeteer, 10, 10);
 
 			reloadGains();
 
@@ -334,9 +367,9 @@ public class Drive extends Subsystem implements Loop {
 		leftDrive1.setPosition(0);
 	}
 
-	public void calibrateGyro() {
-		gyroPigeon.enterCalibrationMode(CalibrationMode.Temperature, TalonSRXEncoder.TIMEOUT_MS);
-	}
+	// public void calibrateGyro() {
+	// 	gyroPigeon.enterCalibrationMode(CalibrationMode.Temperature, TalonSRXEncoder.TIMEOUT_MS);
+	// }
 
 	public void endGyroCalibration() {
 		if (isCalibrating == true) {
@@ -682,13 +715,6 @@ public class Drive extends Subsystem implements Loop {
 		}
 	}
 
-	public synchronized boolean isFinished() {
-		return isFinished;
-	}
-
-	public synchronized void setFinished(boolean isFinished) {
-		this.isFinished = isFinished;
-	}
 	// End
 
 	public double getPeriodMs() {
@@ -718,6 +744,125 @@ public class Drive extends Subsystem implements Loop {
 
 	public synchronized double getDriveMotionMagicPosition() {
 		return rightDrive1.getActiveTrajectoryPosition();
+	}
+
+	//Driving Tele
+	public synchronized void driveWithJoystick() {
+		if (m_drive == null)
+			return;
+
+		// boolean cameraTrackTapeButton = OI.getInstance().getGamepad().getR2().get();
+
+		m_moveInput = OI.getInstance().getGamepad().getLeftYAxis();
+		m_steerInput = -OI.getInstance().getGamepad().getRightXAxis();
+
+		m_moveOutput = adjustForSensitivity(m_moveScale, m_moveTrim, m_moveInput, m_moveNonLinear, MOVE_NON_LINEARITY);
+		m_steerOutput = adjustForSensitivity(m_steerScale, m_steerTrim, m_steerInput, m_steerNonLinear,
+				STEER_NON_LINEARITY);
+
+		// if (useGyroLock) {
+		// 	double yawError = gyroLockAngleDeg - getGyroAngleDeg();
+		// 	m_steerOutput = kPGyro * yawError;
+		// }
+
+		double pitchAngle = updatePitchWindow();
+		if (Math.abs(pitchAngle) > PITCH_THRESHOLD) {
+			m_moveOutput = Math.signum(pitchAngle) * -1.0;
+			m_steerOutput = 0;
+			System.out.println("Pitch Treshhold 2 angle = " + pitchAngle);
+		}
+
+/* 		if (cameraTrackTapeButton) {
+			setPipeline(2);				Vision Auto Aim Tele
+			setLimeLED(0);
+			updateLimelight();
+			double cameraSteer = 0;
+			if (isLimeValid) {
+				double kCameraDrive = kCameraDriveClose;
+				if (limeX <= kCameraClose) {
+					kCameraDrive = kCameraDriveClose;
+				} else if (limeX < kCameraMid) {
+					kCameraDrive = kCameraDriveMid;
+				} else if (limeX < kCameraFar) {
+					kCameraDrive = kCameraDriveFar;
+				}
+				cameraSteer = limeX * kCameraDrive;
+			} else {
+				cameraSteer = -m_steerOutput;
+			}
+			m_steerOutput = -cameraSteer;
+		} */
+
+		m_drive.arcadeDrive(-m_moveOutput, -m_steerOutput);
+	}
+
+	private double updatePitchWindow() {
+		double lastPitchAngle = pitchAverageWindow[windowIndex];
+		double currentPitchAngle = getGyroPitchAngle();
+		pitchAverageWindow[windowIndex] = currentPitchAngle;
+		pitchSum = pitchSum - lastPitchAngle + currentPitchAngle;
+
+		windowIndex++;
+		if (windowIndex == pitchWindowSize) {
+			windowIndex = 0;
+		}
+
+		return pitchSum / pitchWindowSize;
+	}
+
+	private boolean inDeadZone(double input) {
+		boolean inDeadZone;
+		if (Math.abs(input) < STICK_DEADBAND) {
+			inDeadZone = true;
+		} else {
+			inDeadZone = false;
+		}
+		return inDeadZone;
+	}
+
+	public synchronized boolean isFinished() {
+		return isFinished;
+	}
+
+	public synchronized void setFinished(boolean isFinished) {
+		this.isFinished = isFinished;
+	}
+
+	public double adjustForSensitivity(double scale, double trim, double steer, int nonLinearFactor,
+			double wheelNonLinearity) {
+		if (inDeadZone(steer))
+			return 0;
+
+		steer += trim;
+		steer *= scale;
+		steer = limitValue(steer);
+
+		int iterations = Math.abs(nonLinearFactor);
+		for (int i = 0; i < iterations; i++) {
+			if (nonLinearFactor > 0) {
+				steer = nonlinearStickCalcPositive(steer, wheelNonLinearity);
+			} else {
+				steer = nonlinearStickCalcNegative(steer, wheelNonLinearity);
+			}
+		}
+		return steer;
+	}
+
+	private double limitValue(double value) {
+		if (value > 1.0) {
+			value = 1.0;
+		} else if (value < -1.0) {
+			value = -1.0;
+		}
+		return value;
+	}
+
+	private double nonlinearStickCalcPositive(double steer, double steerNonLinearity) {
+		return Math.sin(Math.PI / 2.0 * steerNonLinearity * steer) / Math.sin(Math.PI / 2.0 * steerNonLinearity);
+	}
+
+	private double nonlinearStickCalcNegative(double steer, double steerNonLinearity) {
+		return Math.asin(steerNonLinearity * steer) / Math.asin(steerNonLinearity);
 	}
 
 	public static class PeriodicIO {
