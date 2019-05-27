@@ -358,28 +358,33 @@ public class Drive extends Subsystem implements Loop {
 	}
 
 	public synchronized double getGyroAngleDeg() {
-		gyroPigeon.getYawPitchRoll(yprPigeon);
-		return -yprPigeon[0] + gyroOffsetDeg;
+		// gyroPigeon.getYawPitchRoll(yprPigeon);
+		// return -yprPigeon[0] + gyroOffsetDeg;
+		return -navX.getYaw() + gyroOffsetDeg;
 	}
 
 	public synchronized double getGyroPitchAngle() {
-		gyroPigeon.getYawPitchRoll(yprPigeon);
-		return yprPigeon[2];
+		// gyroPigeon.getYawPitchRoll(yprPigeon);
+		// return yprPigeon[2];
+		return navX.getPitch();
 	}
 
 	public short getGyroXAccel() {
-		gyroPigeon.getBiasedAccelerometer(xyzPigeon);
-		return xyzPigeon[0];
+		// gyroPigeon.getBiasedAccelerometer(xyzPigeon);
+		// return xyzPigeon[0];
+		return (short)navX.getWorldLinearAccelX();
 	}
 
 	public short getGyroYAccel() {
-		gyroPigeon.getBiasedAccelerometer(xyzPigeon);
-		return xyzPigeon[1];
+		// gyroPigeon.getBiasedAccelerometer(xyzPigeon);
+		// return xyzPigeon[1];
+		return (short)navX.getWorldLinearAccelY();
 	}
 
 	public short getGyroZAccel() {
-		gyroPigeon.getBiasedAccelerometer(xyzPigeon);
-		return xyzPigeon[2];
+		// gyroPigeon.getBiasedAccelerometer(xyzPigeon);
+		// return xyzPigeon[2];
+		return (short)navX.getWorldLinearAccelZ();
 	}
 
 	public boolean checkPitchAngle() {
@@ -391,8 +396,9 @@ public class Drive extends Subsystem implements Loop {
 	}
 
 	public synchronized void resetGyro() {
-		gyroPigeon.setYaw(0, TalonSRXEncoder.TIMEOUT_MS);
-		gyroPigeon.setFusedHeading(0, TalonSRXEncoder.TIMEOUT_MS);
+		// gyroPigeon.setYaw(0, TalonSRXEncoder.TIMEOUT_MS);
+		// gyroPigeon.setFusedHeading(0, TalonSRXEncoder.TIMEOUT_MS);
+		navX.reset();
 	}
 
 	public synchronized Rotation2d getHeading() {
@@ -402,7 +408,8 @@ public class Drive extends Subsystem implements Loop {
 	public synchronized void setHeading(Rotation2d heading) {
 		System.out.println("SET HEADING: " + heading.getDegrees());
 
-		mGyroOffset = heading.rotateBy(Rotation2d.fromDegrees(gyroPigeon.getFusedHeading()).inverse());
+		// mGyroOffset = heading.rotateBy(Rotation2d.fromDegrees(gyroPigeon.getFusedHeading().inverse());
+		mGyroOffset = heading.rotateBy(Rotation2d.fromDegrees(navX.getFusedHeading()).inverse());
 		System.out.println("Gyro offset: " + mGyroOffset.getDegrees());
 
 		mPeriodicIO.gyro_heading = heading;
@@ -587,7 +594,8 @@ public class Drive extends Subsystem implements Loop {
 		mPeriodicIO.right_position_ticks = rightDrive1.getSelectedSensorPosition(0);
 		mPeriodicIO.left_velocity_ticks_per_100ms = leftDrive1.getSelectedSensorVelocity(0);
 		mPeriodicIO.right_velocity_ticks_per_100ms = rightDrive1.getSelectedSensorVelocity(0);
-		mPeriodicIO.gyro_heading = Rotation2d.fromDegrees(gyroPigeon.getFusedHeading()).rotateBy(mGyroOffset);
+		// mPeriodicIO.gyro_heading = Rotation2d.fromDegrees(gyroPigeon.getFusedHeading()).rotateBy(mGyroOffset);
+		mPeriodicIO.gyro_heading = Rotation2d.fromDegrees(navX.getFusedHeading()).rotateBy(mGyroOffset);
 
 		double deltaLeftTicks = ((mPeriodicIO.left_position_ticks - prevLeftTicks) / 4096.0) * Math.PI;
 		if (deltaLeftTicks > 0.0) {
