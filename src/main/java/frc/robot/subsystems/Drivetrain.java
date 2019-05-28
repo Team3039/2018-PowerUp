@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
@@ -24,10 +25,6 @@ public class Drivetrain extends Subsystem {
     public TalonSRX frontrightMotor = new TalonSRX(RobotMap.frontrightMotor);
     public TalonSRX rearleftMotor = new TalonSRX(RobotMap.rearleftMotor);
     public TalonSRX rearrightMotor = new TalonSRX(RobotMap.rearrightMotor);
-    
-    //Driving Encoder
-    public Encoder leftEncoder = new Encoder(RobotMap.leftEncoderA, RobotMap.leftEncoderB, false);
-    public Encoder rightEncoder = new Encoder(RobotMap.rightEncoderA, RobotMap.rightEncoderB, false);
     
     //Gyro
     public AHRS navX = new AHRS(SPI.Port.kMXP);
@@ -84,29 +81,28 @@ public class Drivetrain extends Subsystem {
         //360 Pulses per Revolution
         //6" Wheel has a Circumference of 18.85"
     	//18.5/360 = x/1
-        leftEncoder.setDistancePerPulse(0.05235987755983);
-        rightEncoder.setDistancePerPulse(0.05235987755983);
+        frontleftMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+        frontrightMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
     }
     
     public double getLeftDistance() {
-        return leftEncoder.getDistance();
+        return frontleftMotor.getSelectedSensorPosition();
     }
 
     public double getRightDistance() {
-        return rightEncoder.getDistance();
+        return frontrightMotor.getSelectedSensorPosition();      
     }
     
-    public double getLeftRate() {
-    	return leftEncoder.getRate();
+    public double getLeftVelocity() {
+    	return frontleftMotor.getSelectedSensorVelocity();
+    }
+    public double getRightVelocity() {
+        return frontrightMotor.getSelectedSensorVelocity();
     }
 
-    public double getRightRate() {
-        return rightEncoder.getRate();
-    }
-    
     public void resetEncoder() {
-        leftEncoder.reset();
-        rightEncoder.reset();
+        frontleftMotor.setSelectedSensorPosition(0);
+        frontrightMotor.setSelectedSensorPosition(0);
     }
     
     //NavX

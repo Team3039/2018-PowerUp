@@ -20,17 +20,20 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     oi = new OI();
+    drivetrain.resetEncoder();
     SmartDashboard.putData("Auto mode", autoChooser);
   }
 
-
   @Override
   public void robotPeriodic() {
+    SmartDashboard.putNumber("Left", drivetrain.getLeftDistance());
+    SmartDashboard.putNumber("Right", drivetrain.getRightDistance());
   }
 
 
   @Override
   public void disabledInit() {
+    drivetrain.resetEncoder();
   }
 
   @Override
