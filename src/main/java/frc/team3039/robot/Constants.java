@@ -36,8 +36,8 @@ public class Constants {
 
     // Wheels
     // 2019 Robot Values
-    public static final double kDriveWheelTrackWidthInches = 28.00; // 22.61; wheel to wheel
-    public static final double kDriveWheelDiameterInches = 3.922; // 3.875
+    public static final double kDriveWheelTrackWidthInches = 22; // 22.61; wheel to wheel
+    public static final double kDriveWheelDiameterInches = 6; // 3.875
     public static final double kDriveWheelRadiusInches = kDriveWheelDiameterInches / 2.0;
     public static final double kTrackScrubFactor = 0.9; // 0.924; // Tune me!
 
@@ -52,9 +52,9 @@ public class Constants {
 
     // Geometry
     // 2019 Robot Values
-    public static final double kCenterToFrontBumperDistance = 15.832; // 31.664/2
-    public static final double kCenterToRearBumperDistance = 15.832;
-    public static final double kCenterToSideBumperDistance = 15.832;
+    public static final double kCenterToFrontBumperDistance = 19.175; 
+    public static final double kCenterToRearBumperDistance = 19.175;
+    public static final double kCenterToSideBumperDistance = 15.875;
 
     /* CONTROL LOOP GAINS */
 
