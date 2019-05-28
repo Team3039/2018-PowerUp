@@ -9,6 +9,8 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.buttons.Button;
 import frc.controllers.PS4Controller;
+import frc.robot.commands.LowerElevator;
+import frc.robot.commands.RaiseElevator;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -65,32 +67,10 @@ public class OI {
 		
 //Pilot Controls
 		
-		// buttonSquare.toggleWhenPressed(new GetCube());
-		// buttonX.toggleWhenPressed(new SetIntakeUp());
-		// buttonTriangle.toggleWhenPressed(new SetIntakeAngle());
-
-		// L2.whileHeld(new LiftIntake());
-		// R2.whileHeld(new LowerIntake());
-		
-		// R1.toggleWhenPressed(new ShootCube());
-		// L1.toggleWhenPressed(new ShootCubeSlow());
-		
-		// buttonPad.toggleWhenPressed(new SetIntakePosition());
-		// buttonOptions.whileHeld(new ResetIntakeEncoder());
-		
-		// R1.whileHeld(new ShootCube());
+		R1.whileHeld(new RaiseElevator());
+		L1.whileHeld(new LowerElevator());
 
 //CoPilot Controls
-		// coL3.whileHeld(new LowerElevatorClimb());
-		// coR3.whileHeld(new RaiseElevatorClimb());
-		// coL2.whileHeld(new LowerElevator());
-		// coR2.whileHeld(new LiftElevator());
-		// coR1.whileHeld(new ShootCube());
-		// coL1.whileHeld(new ShootCubeSlow());
-		// cobuttonX.whenPressed(new RunElevatorIntake());
-		// cobuttonSquare.toggleWhenPressed(new DropForks());
-		// cobuttonTriangle.whileHeld(new Liftoff());
-		// cobuttonCircle.whenPressed(new RunPreClimb());
-		// cobuttonOptions.whenPressed(new StopElevator());
-  }
+
+	}
 }

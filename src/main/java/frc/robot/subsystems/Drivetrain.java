@@ -31,6 +31,7 @@ public class Drivetrain extends Subsystem {
     
 //Methods    
     public void driveTeleOp(PS4Controller gp) {
+        unBrake();
         double y = gp.getLeftYAxis()*-.8;
         double rot = gp.getRightXAxis()*.4;
 
