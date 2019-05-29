@@ -16,10 +16,9 @@ import frc.team3039.robot.paths.TrajectoryGenerator;
 public class AutoTest extends LazyLoadCommandGroup {
 
   public AutoTest() {
-    // addSequential(new DriveMotionCommand(
-    //     registerTrajectory(TrajectoryGenerator.getInstance().getTrajectorySet().tommysPath), true, false)); //First resets everything, Second resets X,Y
-    // addParallel(new WaitCommand("Break", .5));
-      addSequential(new CollectVelocityData(data, false, false));
+    addSequential(new DriveMotionCommand(
+        registerTrajectory(TrajectoryGenerator.getInstance().getTrajectorySet().tommysPath), true, false)); //First resets everything, Second resets X,Y
+    addParallel(new WaitCommand("Break", .5));
   }
 
 }

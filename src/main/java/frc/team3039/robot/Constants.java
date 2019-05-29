@@ -42,8 +42,8 @@ public class Constants {
     public static final double kTrackScrubFactor = 0.9; // 0.924; // Tune me!
 
     // Tuned dynamics
-    public static final double kRobotLinearInertia = 48.0; // kg TODO tune //weight
-    public static final double kRobotAngularInertia = 10.0; // kg m^2 TODO tune
+    public static final double kRobotLinearInertia = 59.602037; // kg TODO tune //weight
+    public static final double kRobotAngularInertia = 10.0; // kg m^2 TODO tune //weight x legnth
     public static final double kRobotAngularDrag = 12.0; // N*m / (rad/sec) TODO tune
     public static final double kDriveVIntercept = 0.928112644250295; // V
     public static final double kDriveKv = 0.10305; // 0.14242500692715937; // V per rad/s

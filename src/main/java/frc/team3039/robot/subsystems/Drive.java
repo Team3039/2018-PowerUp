@@ -68,10 +68,9 @@ public class Drive extends Subsystem implements Loop {
 	};
 
 	// One revolution of the wheel = Pi * D inches = 4096 ticks
-	public static final double ENCODER_TICKS_TO_INCHES = 4096.0 / (Constants.kDriveWheelDiameterInches * Math.PI);
-	public static final double INCHES_TO_ENCODER_TICKS_MIDDLE_DRIVE = 42.0 / 18.0 * 4096.0 / (2.38 * Math.PI);
-	private static final double DRIVE_ENCODER_PPR = 4096.;
-	public static final double TRACK_WIDTH_INCHES = 23.92; // 24.56; // 26.937;
+	private static final double DRIVE_ENCODER_PPR = 1440.;
+	public static final double ENCODER_TICKS_TO_INCHES = DRIVE_ENCODER_PPR / (Constants.kDriveWheelDiameterInches * Math.PI);
+	public static final double TRACK_WIDTH_INCHES = 22; 
 
 	public static final double OPEN_LOOP_VOLTAGE_RAMP_HI = 0.0;
 	public static final double OPEN_LOOP_VOLTAGE_RAMP_LO = 0.1;
@@ -100,7 +99,7 @@ public class Drive extends Subsystem implements Loop {
 
 	public static final double STICK_DEADBAND = 0.02;
 
-	public static final double PITCH_THRESHOLD = 20;
+	public static final double PITCH_THRESHOLD = 10;
 
 	private int pitchWindowSize = 5;
 	private int windowIndex = 0;
@@ -295,15 +294,15 @@ public class Drive extends Subsystem implements Loop {
 	}
 
 	private static double radiansPerSecondToTicksPer100ms(double rad_s) {
-		return rad_s / (Math.PI * 2.0) * 4096.0 / 10.0;
+		return rad_s / (Math.PI * 2.0) * DRIVE_ENCODER_PPR / 10.0;
 	}
 
 	private static double degreesPerSecondToTicksPer100ms(double deg_s) {
-		return deg_s / (360.0) * 4096.0 / 10.0;
+		return deg_s / (360.0) * DRIVE_ENCODER_PPR / 10.0;
 	}
 
 	private static double inchesPerSecondToTicksPer100ms(double inches_s) {
-		return inchesToRotations(inches_s) * 4096.0 / 10.0;
+		return inchesToRotations(inches_s) * DRIVE_ENCODER_PPR / 10.0;
 	}
 
 	private static double ticksPer100msToInchesPerSec(double ticks_100ms) {
@@ -630,14 +629,14 @@ public class Drive extends Subsystem implements Loop {
 		// mPeriodicIO.gyro_heading = Rotation2d.fromDegrees(gyroPigeon.getFusedHeading()).rotateBy(mGyroOffset);
 		mPeriodicIO.gyro_heading = Rotation2d.fromDegrees(navX.getFusedHeading()).rotateBy(mGyroOffset);
 
-		double deltaLeftTicks = ((mPeriodicIO.left_position_ticks - prevLeftTicks) / 4096.0) * Math.PI;
+		double deltaLeftTicks = ((mPeriodicIO.left_position_ticks - prevLeftTicks) / DRIVE_ENCODER_PPR) * Math.PI;
 		if (deltaLeftTicks > 0.0) {
 			mPeriodicIO.left_distance += deltaLeftTicks * Constants.kDriveWheelDiameterInches;
 		} else {
 			mPeriodicIO.left_distance += deltaLeftTicks * Constants.kDriveWheelDiameterInches;
 		}
 
-		double deltaRightTicks = ((mPeriodicIO.right_position_ticks - prevRightTicks) / 4096.0) * Math.PI;
+		double deltaRightTicks = ((mPeriodicIO.right_position_ticks - prevRightTicks) / DRIVE_ENCODER_PPR) * Math.PI;
 		if (deltaRightTicks > 0.0) {
 			mPeriodicIO.right_distance += deltaRightTicks * Constants.kDriveWheelDiameterInches;
 		} else {
