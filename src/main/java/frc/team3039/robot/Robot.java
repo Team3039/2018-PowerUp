@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.team3039.auto.commands.CharacterizeStraight;
 import frc.team3039.auto.commands.LazyLoadCommandGroup;
 import frc.team3039.auto.routes.AutoTest;
 import frc.team3039.robot.loops.Looper;
@@ -17,6 +18,7 @@ import frc.team3039.robot.paths.TrajectoryGenerator.RightLeftAutonSide;
 import frc.team3039.robot.subsystems.Drive;
 import frc.team3039.robot.subsystems.Elevator;
 import frc.team3039.robot.subsystems.RobotStateEstimator;
+import frc.team3039.robot.subsystems.Drive.DriveControlMode;
 import frc.team3039.utility.lib.control.RobotStatus;
 
 public class Robot extends TimedRobot {
@@ -27,7 +29,7 @@ public class Robot extends TimedRobot {
 	public static final TrajectoryGenerator trajectoryGenerator = TrajectoryGenerator.getInstance();
 
   Command selectedCommand;
-  private SendableChooser<Command> autoChooser;
+  SendableChooser<Command> autoChooser = new SendableChooser<>();
   private SendableChooser<RightLeftAutonSide> autonRightLeftChooser;
   private SendableChooser<OperationMode> operationModeChooser;
   
@@ -52,7 +54,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     oi = OI.getInstance();
-    SmartDashboard.putData("Auto mode", autoChooser);
+    SmartDashboard.putData("Auto mode", autoChooser); 
     ctrlLoop.register(drive);
     RobotStateEstimator.getInstance().registerEnabledLoops(ctrlLoop);
     trajectoryGenerator.generateTrajectories();
@@ -74,6 +76,7 @@ public class Robot extends TimedRobot {
     autonRightLeftChooser = new SendableChooser<RightLeftAutonSide>();
     autonRightLeftChooser.addOption("Left", RightLeftAutonSide.LEFT);
     autonRightLeftChooser.setDefaultOption("Right", RightLeftAutonSide.RIGHT);
+    autoChooser.addOption("V/A Test", new CharacterizeStraight());
     SmartDashboard.putData("Auton Side", autonRightLeftChooser);
 
     LiveWindow.setEnabled(false);
@@ -112,8 +115,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    ctrlLoop.start();
     rightLeftSide = autonRightLeftChooser.getSelected();
+    ctrlLoop.start();
     trajectoryGenerator.setRightLeftAutonSide(rightLeftSide);
 
     if (selectedCommand != null) {
@@ -128,6 +131,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    drive.setControlMode(DriveControlMode.JOYSTICK);
+    ctrlLoop.start();
     if (selectedCommand != null) {
       selectedCommand.cancel();
     }

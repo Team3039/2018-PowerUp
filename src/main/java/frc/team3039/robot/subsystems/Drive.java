@@ -254,6 +254,9 @@ public class Drive extends Subsystem implements Loop {
 
 			motorControllers.add(leftDrive1);
 			motorControllers.add(rightDrive1);
+			
+			m_drive = new BHRDifferentialDrive(leftDrive1, rightDrive1);
+			m_drive.setSafetyEnabled(false);
 
 			mMotionPlanner = new DriveMotionPlanner();
 
