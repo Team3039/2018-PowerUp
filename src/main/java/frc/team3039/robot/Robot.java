@@ -32,7 +32,6 @@ public class Robot extends TimedRobot {
   SendableChooser<Command> autoChooser = new SendableChooser<>();
   private SendableChooser<RightLeftAutonSide> autonRightLeftChooser;
   private SendableChooser<OperationMode> operationModeChooser;
-  
   private Command autonomousCommand;
   private Command previousAutonomousCommand;
 
@@ -54,7 +53,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     oi = OI.getInstance();
-    SmartDashboard.putData("Auto mode", autoChooser); 
+    
     ctrlLoop.register(drive);
     RobotStateEstimator.getInstance().registerEnabledLoops(ctrlLoop);
     trajectoryGenerator.generateTrajectories();
@@ -71,12 +70,13 @@ public class Robot extends TimedRobot {
 
     autoChooser.addOption("Test", new AutoTest());
 
+    autoChooser.addOption("V/A Test", new CharacterizeStraight());
+
     SmartDashboard.putData("Autonomous", autoChooser);
 
     autonRightLeftChooser = new SendableChooser<RightLeftAutonSide>();
     autonRightLeftChooser.addOption("Left", RightLeftAutonSide.LEFT);
     autonRightLeftChooser.setDefaultOption("Right", RightLeftAutonSide.RIGHT);
-    autoChooser.addOption("V/A Test", new CharacterizeStraight());
     SmartDashboard.putData("Auton Side", autonRightLeftChooser);
 
     LiveWindow.setEnabled(false);
@@ -115,8 +115,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    rightLeftSide = autonRightLeftChooser.getSelected();
     ctrlLoop.start();
+
+    rightLeftSide = autonRightLeftChooser.getSelected();
     trajectoryGenerator.setRightLeftAutonSide(rightLeftSide);
 
     if (selectedCommand != null) {
@@ -131,11 +132,14 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    drive.setControlMode(DriveControlMode.JOYSTICK);
-    ctrlLoop.start();
     if (selectedCommand != null) {
       selectedCommand.cancel();
     }
+
+    operationMode = operationModeChooser.getSelected();
+    drive.setControlMode(DriveControlMode.JOYSTICK);
+
+    ctrlLoop.start();
 
     if (operationMode == OperationMode.COMPETITION) {
 

@@ -667,7 +667,6 @@ public class Drive extends Subsystem implements Loop {
 		}
 	}
 	// End
-
 	// Drive
 	public synchronized DriveControlMode getControlMode() {
 		return driveControlMode;
@@ -676,7 +675,7 @@ public class Drive extends Subsystem implements Loop {
 	public synchronized void setControlMode(DriveControlMode controlMode) {
 		this.driveControlMode = controlMode;
 		if (controlMode == DriveControlMode.HOLD) {
-			// mpStraightController.setPID(mpHoldPIDParams, kPositionControlSlot); //Check
+			// mpStraightController.setPID(mpHoldPIDParams, kPositionControlSlot);
 			leftDrive1.setPosition(0);
 			leftDrive1.set(ControlMode.Position, 0);
 			rightDrive1.setPosition(0);
@@ -703,60 +702,14 @@ public class Drive extends Subsystem implements Loop {
 		}
 	}
 
-	public boolean isBrakeMode() {
-		return mIsBrakeMode;
-	}
-
-	public synchronized void setBrakeMode(boolean on) {
-		if (mIsBrakeMode != on) {
-			mIsBrakeMode = on;
-			rightDrive1.setNeutralMode(NeutralMode.Brake);
-			rightDrive2.setNeutralMode(NeutralMode.Brake);
-			leftDrive1.setNeutralMode(NeutralMode.Brake);
-			leftDrive2.setNeutralMode(NeutralMode.Brake);
-		}
-	}
-
-	// End
-
-	public double getPeriodMs() {
-		return periodMs;
-	}
-
-	public synchronized void startLogging() {
-		if (mCSVWriter == null) {
-			mCSVWriter = new ReflectingCSVWriter<>("/home/lvuser/DRIVE-LOGS.csv", PeriodicIO.class);
-		}
-	}
-
-	public synchronized void stopLogging() {
-		if (mCSVWriter != null) {
-			mCSVWriter.flush();
-			mCSVWriter = null;
-		}
-	}
-
-	private int getDriveEncoderTicks(double positionInches) {
-		return (int) (positionInches * ENCODER_TICKS_TO_INCHES);
-	}
-
-	public synchronized boolean hasFinishedDriveMotionMagic() {
-		return Util.epsilonEquals(rightDrive1.getActiveTrajectoryPosition(), targetDrivePositionTicks, 5);
-	}
-
-	public synchronized double getDriveMotionMagicPosition() {
-		return rightDrive1.getActiveTrajectoryPosition();
-	}
-
-	//Driving Tele
 	public synchronized void driveWithJoystick() {
 		if (m_drive == null)
 			return;
 
-		// boolean cameraTrackTapeButton = OI.getInstance().getGamepad().getR2().get();
+		// boolean cameraTrackTapeButton = OI.getInstance().getDriverController().getRightTrigger().get();
 
-		m_moveInput = OI.getInstance().getGamepad().getLeftYAxis();
-		m_steerInput = -OI.getInstance().getGamepad().getRightXAxis();
+		m_moveInput = OI.getInstance().getDriverController().getLeftYAxis();
+		m_steerInput = -OI.getInstance().getDriverController().getRightXAxis();
 
 		m_moveOutput = adjustForSensitivity(m_moveScale, m_moveTrim, m_moveInput, m_moveNonLinear, MOVE_NON_LINEARITY);
 		m_steerOutput = adjustForSensitivity(m_steerScale, m_steerTrim, m_steerInput, m_steerNonLinear,
@@ -771,31 +724,45 @@ public class Drive extends Subsystem implements Loop {
 		if (Math.abs(pitchAngle) > PITCH_THRESHOLD) {
 			m_moveOutput = Math.signum(pitchAngle) * -1.0;
 			m_steerOutput = 0;
-			System.out.println("Pitch Treshhold 2 angle = " + pitchAngle);
+			// System.out.println("Pitch Treshhold 2 angle = " + pitchAngle);
 		}
 
-/* 		if (cameraTrackTapeButton) {
-			setPipeline(2);				Vision Auto Aim Tele
-			setLimeLED(0);
-			updateLimelight();
-			double cameraSteer = 0;
-			if (isLimeValid) {
-				double kCameraDrive = kCameraDriveClose;
-				if (limeX <= kCameraClose) {
-					kCameraDrive = kCameraDriveClose;
-				} else if (limeX < kCameraMid) {
-					kCameraDrive = kCameraDriveMid;
-				} else if (limeX < kCameraFar) {
-					kCameraDrive = kCameraDriveFar;
-				}
-				cameraSteer = limeX * kCameraDrive;
-			} else {
-				cameraSteer = -m_steerOutput;
-			}
-			m_steerOutput = -cameraSteer;
-		} */
+		// if (cameraTrackTapeButton) {
+		// 	setPipeline(2);
+		// 	setLimeLED(0);
+		// 	updateLimelight();
+		// 	double cameraSteer = 0;
+		// 	if (isLimeValid) {
+		// 		double kCameraDrive = kCameraDriveClose;
+		// 		if (limeX <= kCameraClose) {
+		// 			kCameraDrive = kCameraDriveClose;
+		// 		} else if (limeX < kCameraMid) {
+		// 			kCameraDrive = kCameraDriveMid;
+		// 		} else if (limeX < kCameraFar) {
+		// 			kCameraDrive = kCameraDriveFar;
+		// 		}
+		// 		cameraSteer = limeX * kCameraDrive;
+		// 	} else {
+		// 		cameraSteer = -m_steerOutput;
+		// 	}
+		// 	m_steerOutput = -cameraSteer;
+		// }
 
 		m_drive.arcadeDrive(-m_moveOutput, -m_steerOutput);
+	}
+
+	public boolean isBrakeMode() {
+		return mIsBrakeMode;
+	}
+
+	public synchronized void setBrakeMode(boolean on) {
+		if (mIsBrakeMode != on) {
+			mIsBrakeMode = on;
+			rightDrive1.setNeutralMode(NeutralMode.Brake);
+			rightDrive2.setNeutralMode(NeutralMode.Brake);
+			leftDrive1.setNeutralMode(NeutralMode.Brake);
+			leftDrive2.setNeutralMode(NeutralMode.Brake);
+		}
 	}
 
 	private double updatePitchWindow() {
@@ -820,14 +787,6 @@ public class Drive extends Subsystem implements Loop {
 			inDeadZone = false;
 		}
 		return inDeadZone;
-	}
-
-	public synchronized boolean isFinished() {
-		return isFinished;
-	}
-
-	public synchronized void setFinished(boolean isFinished) {
-		this.isFinished = isFinished;
 	}
 
 	public double adjustForSensitivity(double scale, double trim, double steer, int nonLinearFactor,
@@ -867,6 +826,15 @@ public class Drive extends Subsystem implements Loop {
 		return Math.asin(steerNonLinearity * steer) / Math.asin(steerNonLinearity);
 	}
 
+	public synchronized boolean isFinished() {
+		return isFinished;
+	}
+
+	public synchronized void setFinished(boolean isFinished) {
+		this.isFinished = isFinished;
+	}
+
+	// End
 	public static class PeriodicIO {
 		// INPUTS
 		public int left_position_ticks;

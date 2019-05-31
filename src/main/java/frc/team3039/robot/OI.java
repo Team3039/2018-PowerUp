@@ -8,7 +8,10 @@
 package frc.team3039.robot;
 
 import edu.wpi.first.wpilibj.buttons.Button;
+import frc.team3039.controllers.GameController;
 import frc.team3039.controllers.PS4Controller;
+import frc.team3039.controllers.Playstation;
+import frc.team3039.controllers.Xbox;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -16,17 +19,20 @@ import frc.team3039.controllers.PS4Controller;
  */
 public class OI {
 	//Calls the Gamepad Classes: Defines gp and cp for the robot
-	private PS4Controller gp = new PS4Controller(RobotMap.pilot);
-	private PS4Controller cp = new PS4Controller(RobotMap.coPilot);
+	// private PS4Controller gp = new PS4Controller(RobotMap.pilot);
+	// private PS4Controller cp = new PS4Controller(RobotMap.coPilot);
+
+	private GameController m_driver;
+	private GameController m_operator;
 	
-	//Returns Controller Data for use with certain Methods
-	public PS4Controller getGamepad() {
-		return gp;
-	}
+	// //Returns Controller Data for use with certain Methods
+	// public PS4Controller getGamepad() {
+	// 	return gp;
+	// }
 	
-	public PS4Controller getCopad() {
-		return cp;
-	}
+	// public PS4Controller getCopad() {
+	// 	return cp;
+	// }
 	
 
 	private static OI instance;
@@ -39,38 +45,41 @@ public class OI {
 	}
 	//Creates a Button Object from the Controllers
 	//Pilot
-	Button buttonTriangle = gp.getButtonTriangle();
-	Button buttonSquare = gp.getButtonSquare();
-	Button buttonCircle = gp.getButtonCircle();
-	Button buttonX = gp.getButtonX();
-	Button buttonOptions = gp.getOptionsButton();
-	Button buttonShare = gp.getShareButton();
-	Button buttonStart = gp.getStartButton();
-	Button buttonPad = gp.getButtonPad();
-	Button L1 = gp.getL1();
-	Button R1 = gp.getR1();
-	Button L2 = gp.getL2();
-	Button R2 = gp.getR2();
-	Button L3 = gp.getL3();
-	Button R3 = gp.getR3();
+	// Button buttonTriangle = gp.getButtonTriangle();
+	// Button buttonSquare = gp.getButtonSquare();
+	// Button buttonCircle = gp.getButtonCircle();
+	// Button buttonX = gp.getButtonX();
+	// Button buttonOptions = gp.getOptionsButton();
+	// Button buttonShare = gp.getShareButton();
+	// Button buttonStart = gp.getStartButton();
+	// Button buttonPad = gp.getButtonPad();
+	// Button L1 = gp.getL1();
+	// Button R1 = gp.getR1();
+	// Button L2 = gp.getL2();
+	// Button R2 = gp.getR2();
+	// Button L3 = gp.getL3();
+	// Button R3 = gp.getR3();
 	
 	
-	//CoPilot
-	Button cobuttonTriangle = cp.getButtonTriangle();
-	Button cobuttonSquare = cp.getButtonSquare();
-	Button cobuttonCircle = cp.getButtonCircle();
-	Button cobuttonX = cp.getButtonX();
-	Button cobuttonOptions = cp.getOptionsButton();
-	Button cobuttonShare = cp.getShareButton();
-	Button cobuttonPad = cp.getButtonPad();
-	Button coL1 = cp.getL1();
-	Button coR1 = cp.getR1();
-	Button coL2 = cp.getL2();
-	Button coR2 = cp.getR2();
-	Button coL3 = cp.getL3();
-	Button coR3 = cp.getR3();
+	// //CoPilot
+	// Button cobuttonTriangle = cp.getButtonTriangle();
+	// Button cobuttonSquare = cp.getButtonSquare();
+	// Button cobuttonCircle = cp.getButtonCircle();
+	// Button cobuttonX = cp.getButtonX();
+	// Button cobuttonOptions = cp.getOptionsButton();
+	// Button cobuttonShare = cp.getShareButton();
+	// Button cobuttonPad = cp.getButtonPad();
+	// Button coL1 = cp.getL1();
+	// Button coR1 = cp.getR1();
+	// Button coL2 = cp.getL2();
+	// Button coR2 = cp.getR2();
+	// Button coL3 = cp.getL3();
+	// Button coR3 = cp.getR3();
 	
-	public OI() {
+	private OI() {
+
+		m_driver = new GameController(RobotMap.pilot, new Playstation());
+		m_operator = new GameController(RobotMap.coPilot, new Playstation());
 		
 //Pilot Controls
 		
@@ -102,4 +111,12 @@ public class OI {
 		// cobuttonCircle.whenPressed(new RunPreClimb());
 		// cobuttonOptions.whenPressed(new StopElevator());
   }
+
+  	public GameController getDriverController() {
+		return m_driver;
+	}
+
+	public GameController getOperatorController() {
+		return m_operator;
+	}
 }
