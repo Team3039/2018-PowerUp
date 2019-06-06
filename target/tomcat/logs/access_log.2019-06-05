@@ -1,0 +1,16 @@
+0:0:0:0:0:0:0:1 - - [05/Jun/2019:11:55:38 -0500] "GET / HTTP/1.1" 200 2082 http-bio-8080-exec-1 1655
+0:0:0:0:0:0:0:1 - - [05/Jun/2019:11:55:38 -0500] "GET /resources/js/script.js;jsessionid=B92335F5D8CD4055CF8081BA6C5C335A HTTP/1.1" 200 17334 http-bio-8080-exec-2 16
+0:0:0:0:0:0:0:1 - - [05/Jun/2019:11:55:38 -0500] "GET /resources/css/style.css;jsessionid=B92335F5D8CD4055CF8081BA6C5C335A HTTP/1.1" 200 2312 http-bio-8080-exec-3 6
+0:0:0:0:0:0:0:1 - - [05/Jun/2019:11:55:38 -0500] "GET /resources/img/favicon.ico HTTP/1.1" 200 906 http-bio-8080-exec-5 2
+0:0:0:0:0:0:0:1 - - [05/Jun/2019:11:55:38 -0500] "GET /resources/img/field.png HTTP/1.1" 200 310966 http-bio-8080-exec-4 11
+0:0:0:0:0:0:0:1 - - [05/Jun/2019:11:55:38 -0500] "GET /resources/img/fieldFlipped.png HTTP/1.1" 200 309905 http-bio-8080-exec-7 7
+0:0:0:0:0:0:0:1 - - [05/Jun/2019:11:55:39 -0500] "POST /api/calculate_splines HTTP/1.1" 400 968 http-bio-8080-exec-8 27
+0:0:0:0:0:0:0:1 - - [05/Jun/2019:11:55:39 -0500] "POST /api/get_trajectory_list HTTP/1.1" 200 899 http-bio-8080-exec-9 64
+0:0:0:0:0:0:0:1 - - [05/Jun/2019:11:55:45 -0500] "POST /api/calculate_splines HTTP/1.1" 400 968 http-bio-8080-exec-10 16
+0:0:0:0:0:0:0:1 - - [05/Jun/2019:11:55:45 -0500] "POST /api/get_trajectory HTTP/1.1" 200 2274 http-bio-8080-exec-1 32
+0:0:0:0:0:0:0:1 - - [05/Jun/2019:11:55:50 -0500] "POST /api/calculate_splines HTTP/1.1" 400 968 http-bio-8080-exec-1 12
+0:0:0:0:0:0:0:1 - - [05/Jun/2019:11:55:50 -0500] "POST /api/get_trajectory HTTP/1.1" 200 16586 http-bio-8080-exec-3 39
+0:0:0:0:0:0:0:1 - - [05/Jun/2019:11:55:55 -0500] "POST /api/calculate_splines HTTP/1.1" 400 968 http-bio-8080-exec-5 14
+0:0:0:0:0:0:0:1 - - [05/Jun/2019:11:55:55 -0500] "POST /api/get_trajectory HTTP/1.1" 200 12942 http-bio-8080-exec-6 22
+0:0:0:0:0:0:0:1 - - [05/Jun/2019:11:56:20 -0500] "POST /api/get_trajectory HTTP/1.1" 200 14292 http-bio-8080-exec-7 16
+0:0:0:0:0:0:0:1 - - [05/Jun/2019:11:56:20 -0500] "POST /api/calculate_splines HTTP/1.1" 400 968 http-bio-8080-exec-6 25
