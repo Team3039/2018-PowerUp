@@ -28,7 +28,6 @@ import frc.team3039.robot.planners.DriveMotionPlanner;
 import frc.team3039.utility.BHRDifferentialDrive;
 import frc.team3039.utility.DriveSignal;
 import frc.team3039.utility.ReflectingCSVWriter;
-import frc.team3039.utility.Util;
 import frc.team3039.utility.lib.control.RobotStatus;
 import frc.team3039.utility.lib.drivers.TalonSRXChecker;
 import frc.team3039.utility.lib.drivers.TalonSRXEncoder;
@@ -43,8 +42,12 @@ import frc.team3039.utility.lib.trajectory.timing.TimedState;
  *
  */
 public class Drive extends Subsystem implements Loop {
-//Setup    
-    
+	private static Drive instance;
+
+	public static enum DriveControlMode {
+		JOYSTICK, HOLD, MANUAL, VELOCITY_SETPOINT, CAMERA_TRACK, PATH_FOLLOWING, OPEN_LOOP
+	};
+
     //Gyro
     public AHRS navX = new AHRS(SPI.Port.kMXP);
     
@@ -61,14 +64,8 @@ public class Drive extends Subsystem implements Loop {
     public void initDefaultCommand() {
     }
 
-    private static Drive instance;
-
-	public static enum DriveControlMode {
-		JOYSTICK, HOLD, MANUAL, VELOCITY_SETPOINT, CAMERA_TRACK, PATH_FOLLOWING, OPEN_LOOP
-	};
-
 	// One revolution of the wheel = Pi * D inches = 4096 ticks
-	private static final double DRIVE_ENCODER_PPR = 1440.;
+	private static final double DRIVE_ENCODER_PPR = 4096.;
 	public static final double ENCODER_TICKS_TO_INCHES = DRIVE_ENCODER_PPR / (Constants.kDriveWheelDiameterInches * Math.PI);
 	public static final double TRACK_WIDTH_INCHES = 22; 
 
@@ -109,8 +106,8 @@ public class Drive extends Subsystem implements Loop {
 	private int m_moveNonLinear = 0;
 	private int m_steerNonLinear = -3;
 
-	private double m_moveScale = 1.0;
-	private double m_steerScale = 1.0;
+	private double m_moveScale = 1.0;		//Y Speed
+	private double m_steerScale = 0.5;		//Turn Speed
 
 	private double m_moveInput = 0.0;
 	private double m_steerInput = 0.0;
@@ -240,14 +237,14 @@ public class Drive extends Subsystem implements Loop {
 			leftDrive1.setSafetyEnabled(false);
 			leftDrive1.setSensorPhase(false);
 
-			leftDrive1.setInverted(true);
-			leftDrive2.setInverted(true);
+			leftDrive1.setInverted(false);			
+			leftDrive2.setInverted(false);
 
 			rightDrive1.setSafetyEnabled(false);
 			rightDrive1.setSensorPhase(false);
 
-			rightDrive1.setInverted(false);
-			rightDrive2.setInverted(false);
+			rightDrive1.setInverted(true);
+			rightDrive2.setInverted(true);
 
 			configureMaster(leftDrive1);
 			configureMaster(rightDrive1);
@@ -373,11 +370,11 @@ public class Drive extends Subsystem implements Loop {
 	// 	gyroPigeon.enterCalibrationMode(CalibrationMode.Temperature, TalonSRXEncoder.TIMEOUT_MS);
 	// }
 
-	public void endGyroCalibration() {
-		if (isCalibrating == true) {
-			isCalibrating = false;
-		}
-	}
+	// public void endGyroCalibration() {
+	// 	if (isCalibrating == true) {
+	// 		isCalibrating = false;
+	// 	}
+	// }
 
 	public void setGyroOffset(double offsetDeg) {
 		gyroOffsetDeg = offsetDeg;
@@ -706,8 +703,6 @@ public class Drive extends Subsystem implements Loop {
 		if (m_drive == null)
 			return;
 
-		// boolean cameraTrackTapeButton = OI.getInstance().getDriverController().getRightTrigger().get();
-
 		m_moveInput = OI.getInstance().getDriverController().getLeftYAxis();
 		m_steerInput = -OI.getInstance().getDriverController().getRightXAxis();
 
@@ -718,34 +713,6 @@ public class Drive extends Subsystem implements Loop {
 		// if (useGyroLock) {
 		// 	double yawError = gyroLockAngleDeg - getGyroAngleDeg();
 		// 	m_steerOutput = kPGyro * yawError;
-		// }
-
-		double pitchAngle = updatePitchWindow();
-		if (Math.abs(pitchAngle) > PITCH_THRESHOLD) {
-			m_moveOutput = Math.signum(pitchAngle) * -1.0;
-			m_steerOutput = 0;
-			// System.out.println("Pitch Treshhold 2 angle = " + pitchAngle);
-		}
-
-		// if (cameraTrackTapeButton) {
-		// 	setPipeline(2);
-		// 	setLimeLED(0);
-		// 	updateLimelight();
-		// 	double cameraSteer = 0;
-		// 	if (isLimeValid) {
-		// 		double kCameraDrive = kCameraDriveClose;
-		// 		if (limeX <= kCameraClose) {
-		// 			kCameraDrive = kCameraDriveClose;
-		// 		} else if (limeX < kCameraMid) {
-		// 			kCameraDrive = kCameraDriveMid;
-		// 		} else if (limeX < kCameraFar) {
-		// 			kCameraDrive = kCameraDriveFar;
-		// 		}
-		// 		cameraSteer = limeX * kCameraDrive;
-		// 	} else {
-		// 		cameraSteer = -m_steerOutput;
-		// 	}
-		// 	m_steerOutput = -cameraSteer;
 		// }
 
 		m_drive.arcadeDrive(-m_moveOutput, -m_steerOutput);
@@ -832,6 +799,27 @@ public class Drive extends Subsystem implements Loop {
 
 	public synchronized void setFinished(boolean isFinished) {
 		this.isFinished = isFinished;
+	}
+
+	public double getPeriodMs() {
+		return periodMs;
+	}
+
+	private int getDriveEncoderTicks(double positionInches) {
+		return (int) (positionInches * ENCODER_TICKS_TO_INCHES);
+	}
+
+	public synchronized void startLogging() {
+		if (mCSVWriter == null) {
+			mCSVWriter = new ReflectingCSVWriter<>("/home/lvuser/DRIVE-LOGS.csv", PeriodicIO.class);
+		}
+	}
+
+	public synchronized void stopLogging() {
+		if (mCSVWriter != null) {
+			mCSVWriter.flush();
+			mCSVWriter = null;
+		}
 	}
 
 	// End

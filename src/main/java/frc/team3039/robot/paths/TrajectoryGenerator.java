@@ -368,8 +368,8 @@ public class TrajectoryGenerator {
 
                         return generateTrajectory(false, waypoints,
                                         Arrays.asList(new CentripetalAccelerationConstraint(
-                                                        kPathMaxCentripetalAccel)),
-                                        kPathMaxVelocity, kPathMaxAccel, kMaxVoltage);
+                                                        30.0)),
+                                        48.0, 44.0, kMaxVoltage);
                 }
 
                 private Trajectory<TimedState<Pose2dWithCurvature>> getRocketFrontToTurn1() {

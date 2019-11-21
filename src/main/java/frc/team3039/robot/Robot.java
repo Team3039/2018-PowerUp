@@ -28,15 +28,17 @@ public class Robot extends TimedRobot {
   public static final RobotStateEstimator estimator = RobotStateEstimator.getInstance();
 	public static final TrajectoryGenerator trajectoryGenerator = TrajectoryGenerator.getInstance();
 
-  Command selectedCommand;
-  SendableChooser<Command> autoChooser = new SendableChooser<>();
-  private SendableChooser<RightLeftAutonSide> autonRightLeftChooser;
+  //Control Loop
+  public static final Looper ctrlLoop = new Looper();
+
+  // Choosers
   private SendableChooser<OperationMode> operationModeChooser;
+  private SendableChooser<Command> autonTaskChooser;
+  private SendableChooser<RightLeftAutonSide> autonRightLeftChooser;
   private Command autonomousCommand;
   private Command previousAutonomousCommand;
 
   private RobotStatus robotstatus = RobotStatus.getInstance();
-  public static final Looper ctrlLoop = new Looper();
 
   public static enum OperationMode {
 		TEST, PRACTICE, COMPETITION
@@ -64,15 +66,15 @@ public class Robot extends TimedRobot {
     operationModeChooser.addOption("Test", OperationMode.TEST);
     SmartDashboard.putData("Operation Mode", operationModeChooser);
 
-    autoChooser = new SendableChooser<Command>();
+    autonTaskChooser = new SendableChooser<Command>();
 
-    autoChooser.setDefaultOption("None", null);
+    autonTaskChooser.setDefaultOption("None", null);
 
-    autoChooser.addOption("Test", new AutoTest());
+    autonTaskChooser.addOption("Test", new AutoTest());
 
-    autoChooser.addOption("V/A Test", new CharacterizeStraight());
+    autonTaskChooser.addOption("V/A Test", new CharacterizeStraight());
 
-    SmartDashboard.putData("Autonomous", autoChooser);
+    SmartDashboard.putData("Autonomous", autonTaskChooser);
 
     autonRightLeftChooser = new SendableChooser<RightLeftAutonSide>();
     autonRightLeftChooser.addOption("Left", RightLeftAutonSide.LEFT);
@@ -99,7 +101,7 @@ public class Robot extends TimedRobot {
   public void disabledPeriodic() {
     Scheduler.getInstance().run();
 
-    autonomousCommand = autoChooser.getSelected();
+    autonomousCommand = autonTaskChooser.getSelected();
     if (autonomousCommand != previousAutonomousCommand) {
       if (autonomousCommand != null && autonomousCommand instanceof LazyLoadCommandGroup) {
         LazyLoadCommandGroup lazyLoad = (LazyLoadCommandGroup) autonomousCommand;
@@ -120,8 +122,8 @@ public class Robot extends TimedRobot {
     rightLeftSide = autonRightLeftChooser.getSelected();
     trajectoryGenerator.setRightLeftAutonSide(rightLeftSide);
 
-    if (selectedCommand != null) {
-      selectedCommand.start();
+    if (autonomousCommand != null) {
+      autonomousCommand.start();
     }
   }
 
@@ -132,13 +134,12 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    if (selectedCommand != null) {
-      selectedCommand.cancel();
+    if (autonomousCommand != null) {
+      autonomousCommand.cancel();
     }
 
     operationMode = operationModeChooser.getSelected();
     drive.setControlMode(DriveControlMode.JOYSTICK);
-
     ctrlLoop.start();
 
     if (operationMode == OperationMode.COMPETITION) {

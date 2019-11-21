@@ -9,9 +9,9 @@ package frc.team3039.robot;
 
 import edu.wpi.first.wpilibj.buttons.Button;
 import frc.team3039.controllers.GameController;
-import frc.team3039.controllers.PS4Controller;
 import frc.team3039.controllers.Playstation;
-import frc.team3039.controllers.Xbox;
+import frc.team3039.robot.commands.MoveBackward;
+import frc.team3039.robot.commands.MoveFoward;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -80,6 +80,12 @@ public class OI {
 
 		m_driver = new GameController(RobotMap.pilot, new Playstation());
 		m_operator = new GameController(RobotMap.coPilot, new Playstation());
+
+		Button moveForawrd = m_driver.getButtonTriangle();
+		moveForawrd.whileHeld(new MoveFoward());
+
+		Button moveBackward = m_driver.getButtonX();
+		moveBackward.whileHeld(new MoveBackward());
 		
 //Pilot Controls
 		
